@@ -4,9 +4,9 @@ function SocialNetworks() {
   return (
     <div className="flex gap-4 justify-center md:justify-start">
       {/* Linkedin */}
-      <div rippleColor="light">
+      <div>
         <Link
-          to="https://www.linkedin.com/in/goga-bagauri-16145344"
+          to="https://www.linkedin.com/in/goga-bagauri/"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-block rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
@@ -19,7 +19,7 @@ function SocialNetworks() {
       </div>
 
       {/* Github */}
-      <div rippleColor="light">
+      <div>
         <Link
           to="https://github.com/GBaga"
           target="_blank"
@@ -34,7 +34,7 @@ function SocialNetworks() {
       </div>
 
       {/* X (formerly Twitter) */}
-      <div rippleColor="light">
+      <div>
         <Link
           to="https://x.com/GBagauri"
           target="_blank"

@@ -6,7 +6,7 @@ const fetchStatuses = async () => {
   return data;
 };
 
-const StatusList = () => {
+const GetStatusList = () => {
   const {
     data: statuses,
     isLoading,
@@ -20,12 +20,15 @@ const StatusList = () => {
   if (isError) return <p>Error fetching statuses</p>;
 
   return (
-    <ul>
+    <ul className=" bg-pink-500 ">
       {statuses.map((status) => (
-        <li key={status.id}>{status.name}</li>
+        <li key={status.id} className="flex gap-1">
+          <p>{status.id}</p>
+          <p>{status.name}</p>
+        </li>
       ))}
     </ul>
   );
 };
 
-export default StatusList;
+export default GetStatusList;

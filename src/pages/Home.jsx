@@ -1,10 +1,13 @@
-import StatusList from "../components/StatusList";
+import GetAllDepartments from "../components/GetAllDepartments";
+import GetAllPriorities from "../components/GetAllPriorities";
+import GetStatusList from "../components/GetStatusList";
 
 function Home() {
   return (
     <>
-      <div className="flex flex-col bg-pink-500 p-40">მარიამ</div>
-      <StatusList />
+      <GetStatusList />
+      <GetAllPriorities />
+      <GetAllDepartments />
     </>
   );
 }
