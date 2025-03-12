@@ -15,9 +15,9 @@ function Navbar() {
             Momentum
           </span>
           <img
-            src="/public/assets/img-hourglass.png"
+            src="/public/assets/images/img-hourglass.png"
             className="h-full"
-            alt="Weather Site Logo"
+            alt="Site Logo"
           />
         </Link>
 
@@ -25,7 +25,7 @@ function Navbar() {
           <ul className="font-medium flex flex-col items-center p-4 md:p-0 mt-4 border border-gray-700 rounded-lg  md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 ">
             <li>
               <Link to="/">
-                <BtnCreateEmployee />
+                <BtnCreateEmployee title="თანამშრომლის შექმნა" />
               </Link>
             </li>
             <li>
@@ -85,9 +85,9 @@ function Navbar() {
               Momentum
             </span>
             <img
-              src="/public/assets/img-hourglass.png"
+              src="/public/assets/images/img-hourglass.png"
               className="h-full"
-              alt="Weather Site Logo"
+              alt="Site Logo"
             />
           </Link>
 

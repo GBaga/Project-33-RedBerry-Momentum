@@ -1,4 +1,4 @@
-const BtnCreateEmployee = ({ text }) => {
+const BtnCreateEmployee = ({ title }) => {
   return (
     <button
       className="w-[225px] h-[39px] rounded-[5px] border-[1px] border-gray-300 
@@ -6,7 +6,7 @@ const BtnCreateEmployee = ({ text }) => {
                          transition-all duration-300 ease-out hover:bg-blue-700 hover:shadow-lg 
                          active:scale-95 "
     >
-      {text} თანამშრომლის შექმნა
+      {title}
     </button>
   );
 };
