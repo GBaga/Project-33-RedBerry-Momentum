@@ -85,7 +85,7 @@ function Navbar() {
               Momentum
             </span>
             <img
-              src="/public/assets/images/img-hourglass.png"
+              src="/assets/images/img-hourglass.png"
               className="h-full"
               alt="Site Logo"
             />
