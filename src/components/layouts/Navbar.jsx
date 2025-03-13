@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import BtnCreateNew from "../button/BtnCreateNew";
-import BtnCreateEmployee from "../button/BtnCreateEmployee";
+import ModalWindow from "../ModalWindow";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -25,7 +25,7 @@ function Navbar() {
           <ul className="font-medium flex flex-col items-center p-4 md:p-0 mt-4 border border-gray-700 rounded-lg  md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 ">
             <li>
               <Link to="/">
-                <BtnCreateEmployee title="თანამშრომლის შექმნა" />
+                <ModalWindow />
               </Link>
             </li>
             <li>

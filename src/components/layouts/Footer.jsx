@@ -1,3 +1,4 @@
+import RegistrationForm from "../RegistrationForm";
 import SocialNetworks from "./SocialNetworks";
 import { Link } from "react-router";
 
