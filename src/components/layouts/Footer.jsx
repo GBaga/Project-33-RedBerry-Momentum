@@ -11,14 +11,22 @@ function Footer() {
           <div className="w-full flex flex-col  items-center gap-8 sm:gap-7 md:flex-row md:justify-between">
             <SocialNetworks />
 
-            <Link
-              to="https://gbaga.github.io/Project-20-My-Portfolio-Design/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-gray-500 dark:text-gray-300 sm:text-center md:order-first"
-            >
-              © 2025 GBaga. ყველა უფლება დაცულია
-            </Link>
+            <p className="text-sm text-gray-500 dark:text-gray-300 sm:text-center md:order-first">
+              © 2025 GBaga for
+              <Link
+                to="https://redberry.international/bootcamp/"
+                target="_blank"
+              >
+                <span className="text-red-400"> Redberry</span>
+              </Link>
+              <Link
+                to="https://redberry.gitbook.io/bootcamp-9-assignment-momentum"
+                target="_blank"
+              >
+                <span> Bootcamp #9 | </span>
+              </Link>
+              ყველა უფლება დაცულია.
+            </p>
           </div>
         </div>
       </div>
