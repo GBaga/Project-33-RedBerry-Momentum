@@ -4,15 +4,14 @@ import { Button, Form, Input, Select, Upload } from "antd";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-// Fetching departments
 const fetchDepartments = async () => {
   const { data } = await axios.get("/departments");
-  return data;
+  return Array.isArray(data) ? data : data.departments || []; // Ensure it's an array
 };
 
 const RegistrationForm = () => {
   const {
-    data: departments,
+    data: departments = [],
     isLoading,
     isError,
   } = useQuery({
@@ -32,35 +31,28 @@ const RegistrationForm = () => {
     formData.append("surname", values.lastName);
     formData.append("department_id", values.department);
 
-    // Append the avatar file (if any)
     if (values.avatar && values.avatar[0]) {
       formData.append("avatar", values.avatar[0].originFileObj);
     }
 
     try {
       const response = await axios.post(
-        "https://momentum.redberryinternship.ge/api/employees", // Single endpoint for both upload and employee creation
+        "https://momentum.redberryinternship.ge/api/employees",
         formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            Authorization: `Bearer 9e6a8d4d-4d40-4a42-a5fd-a4d8b8ff1e43`, // Replace with your token
+            Authorization: `Bearer 9e6a8d4d-4d40-4a42-a5fd-a4d8b8ff1e43`,
           },
         }
       );
       console.log("Employee created:", response.data);
-      // Handle success, show success message, or redirect
     } catch (error) {
       console.error("Error creating employee:", error);
     }
   };
 
-  const normFile = (e) => {
-    if (Array.isArray(e)) {
-      return e;
-    }
-    return e?.fileList;
-  };
+  const normFile = (e) => (Array.isArray(e) ? e : e?.fileList);
 
   return (
     <Form
@@ -105,13 +97,7 @@ const RegistrationForm = () => {
             type="button"
           >
             <PlusOutlined />
-            <div
-              style={{
-                marginTop: 8,
-              }}
-            >
-              Upload
-            </div>
+            <div style={{ marginTop: 8 }}>Upload</div>
           </button>
         </Upload>
       </Form.Item>
@@ -136,6 +122,18 @@ const RegistrationForm = () => {
         </Button>
       </Form.Item>
     </Form>
+  );
+};
+
+const BtnCreateNew = () => {
+  return (
+    <button
+      className="w-[268px] h-[40px] rounded-[5px] px-5 py-2 bg-blue-600 text-white font-medium 
+                 flex items-center justify-center gap-1 transition-all duration-300 ease-out 
+                 hover:bg-blue-700 hover:shadow-lg active:scale-95"
+    >
+      + შექმენი ახალი დავალება
+    </button>
   );
 };
 
