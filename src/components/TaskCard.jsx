@@ -60,7 +60,7 @@ function TaskCard({
   return (
     <button
       style={{ border: `1px solid ${borderColor}` }}
-      className="w-full max-w-sm p-6 bg-white border rounded-2xl shadow-sm dark:bg-gray-800 dark:border-gray-700 mx-auto cursor-pointer hover:scale-102 transition-all duration-300 ease-in-out"
+      className="w-full max-w-sm p-6 bg-white border rounded-2xl shadow-sm  mx-auto cursor-pointer hover:scale-102 transition-all duration-300 ease-in-out"
     >
       <div className="flex justify-between items-center mb-7">
         <div className="w-[184px] flex items-center gap-2">
@@ -88,10 +88,10 @@ function TaskCard({
         <p className="text-sm">{formatDate(dueDate)}</p>
       </div>
 
-      <h5 className="mb-3 text-[15px] font-bold tracking-tight text-gray-900 dark:text-white text-left">
+      <h5 className="mb-3 text-[15px] font-bold tracking-tight text-gray-900 text-left">
         {name}
       </h5>
-      <p className="mb-7 font-normal text-[14px] text-[#343A40] dark:text-gray-400 text-left">
+      <p className="mb-7 font-normal text-[14px] text-[#343A40] text-left">
         {description}
       </p>
 

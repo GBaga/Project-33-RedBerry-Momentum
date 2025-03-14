@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { publicAxios } from "../config/axios";
+import Loader from "./Loader";
 
 const fetchStatuses = async () => {
   const { data } = await publicAxios.get("/statuses");
@@ -16,7 +17,7 @@ const GetStatusList = () => {
     queryFn: fetchStatuses,
   });
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <Loader />;
   if (isError) return <p>Error fetching statuses</p>;
 
   return (

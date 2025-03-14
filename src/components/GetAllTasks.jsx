@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { publicAxios } from "../config/axios";
 import TaskCard from "./TaskCard";
+import Loader from "./Loader";
 
 const fetchTasks = async () => {
   try {
@@ -28,7 +29,7 @@ const GetAllTasks = () => {
     retry: 2,
   });
 
-  if (isLoading) return <p>Loading tasks...</p>;
+  if (isLoading) return <Loader />;
   if (isError) return <p className="text-red-500">Error: {error.message}</p>;
 
   return (

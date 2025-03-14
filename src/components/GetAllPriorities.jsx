@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { publicAxios } from "../config/axios";
+import Loader from "./Loader";
 
 const fetchPriorities = async () => {
   const { data } = await publicAxios.get("/priorities");
@@ -16,7 +17,7 @@ const GetAllPriorities = () => {
     queryFn: fetchPriorities,
   });
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <Loader />;
   if (isError) return <p>Error fetching statuses</p>;
 
   return (

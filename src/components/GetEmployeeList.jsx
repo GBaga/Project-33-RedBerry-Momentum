@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { publicAxios } from "../config/axios";
+import Loader from "./Loader";
 
 // Fetch function to get the employees data
 const fetchEmployees = async () => {
@@ -18,7 +19,7 @@ const GetEmployeeList = () => {
   });
 
   // Handle loading and error states
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <Loader />;
   if (isError) return <p>Error fetching employees</p>;
 
   // Handle empty data scenario

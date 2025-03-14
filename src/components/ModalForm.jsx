@@ -4,6 +4,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
 import { publicAxios } from "../config/axios";
 import "./modalForm.css";
+import Loader from "./Loader";
 
 const fetchDepartments = async () => {
   const { data } = await publicAxios.get("/departments");
@@ -98,7 +99,7 @@ const ModalForm = () => {
         ]}
       >
         {isLoading ? (
-          <p>Loading...</p>
+          <Loader />
         ) : isError ? (
           <p>Error fetching departments</p>
         ) : (
