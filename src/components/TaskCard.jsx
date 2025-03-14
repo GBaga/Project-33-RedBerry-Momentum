@@ -103,10 +103,7 @@ function TaskCard({
         />
 
         <div className="flex gap-1 items-center">
-          <img
-            src="/public/assets/images/comments-icon.png"
-            alt="comments-icon"
-          />
+          <img src="/assets/images/comments-icon.png" alt="comments-icon" />
           <p className="text-sm">{totalComments}</p>
         </div>
       </div>

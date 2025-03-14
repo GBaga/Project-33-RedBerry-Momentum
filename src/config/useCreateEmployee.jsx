@@ -30,11 +30,11 @@ const useCreateEmployee = () => {
 
       setMessage("Employee created successfully!");
       setIsLoading(false);
-      return response.data; // Return employee data if needed
+      return response.data;
     } catch (error) {
       setMessage("Error creating employee.");
       setIsLoading(false);
-      throw error; // You can handle the error in the component if needed
+      throw error;
     }
   };
 
