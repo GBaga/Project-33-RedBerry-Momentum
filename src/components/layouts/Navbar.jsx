@@ -16,7 +16,7 @@ function Navbar() {
             Momentum
           </span>
           <img
-            src="/assets/images/img-hourglass.png"
+            src="/assets/images/hourglass-img.png"
             className="h-full"
             alt="Site Logo"
           />
@@ -25,9 +25,7 @@ function Navbar() {
         <div className="hidden w-full md:block md:w-auto" id="navbar-default">
           <ul className="font-medium flex flex-col items-center p-4 md:p-0 mt-4 border border-gray-700 rounded-lg  md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 ">
             <li>
-              <Link to="/">
-                <ModalForm />
-              </Link>
+              <ModalForm styles={{ width: "100%" }} />
             </li>
             <li>
               <Link to="/">
@@ -71,35 +69,37 @@ function Navbar() {
       >
         <button
           onClick={() => setMenuOpen(false)}
-          className="absolute top-4 right-4 text-white text-2xl"
+          className="absolute top-4 right-4 text-white text-2xl cursor-pointer"
         >
           ✖
         </button>
 
-        <div className="w-full px-4 text-center">
+        <div className="w-full px-4 text-center ">
           <Link
             to="/"
-            className="flex items-center space-x-3"
+            className="flex items-center space-x-3  mb-8"
             onClick={() => setMenuOpen(false)}
           >
             <span className="self-center text-2xl font-semibold whitespace-nowrap text-white">
               Momentum
             </span>
             <img
-              src="/assets/images/img-hourglass.png"
+              src="/assets/images/hourglass-img.png"
               className="h-full"
               alt="Site Logo"
             />
           </Link>
 
           <div className="flex flex-col space-y-4 sm:justify-center">
-            <Link
+            {/* <Link
               to="/history"
               onClick={() => setMenuOpen(false)}
               className="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900"
             >
               თანამშრომლის შექმნა
-            </Link>
+            </Link> */}
+
+            <ModalForm />
             <Link
               onClick={() => setMenuOpen(false)}
               to="/detailed-history"

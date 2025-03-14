@@ -34,6 +34,8 @@ const ModalForm = () => {
       formData.append("avatar", values.avatar[0].originFileObj);
     }
 
+    const token = import.meta.env.VITE_API_TOKEN;
+
     try {
       const response = await publicAxios.post(
         "https://momentum.redberryinternship.ge/api/employees",
@@ -41,7 +43,7 @@ const ModalForm = () => {
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            Authorization: `Bearer 9e6a8d4d-4d40-4a42-a5fd-a4d8b8ff1e43`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -62,9 +64,7 @@ const ModalForm = () => {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="w-[268px] h-[40px] rounded-[5px] px-5 py-2 bg-blue-600 text-white font-medium 
-                   flex items-center justify-center gap-1 transition-all duration-300 ease-out 
-                   hover:bg-blue-700 hover:shadow-lg active:scale-95"
+        className=" h-10 inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white md:text-black rounded-[5px] border border-purple-600 hover:border-purple-300 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900 cursor-pointer transition-all duration-300 ease-in-out"
       >
         თანამშრომლის შექმნა
       </button>
