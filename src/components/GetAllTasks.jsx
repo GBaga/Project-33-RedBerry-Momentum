@@ -44,6 +44,7 @@ const GetAllTasks = () => {
           departmentId={task.department?.id}
           employeeAvatar={task.employee?.avatar}
           status={task.status?.name}
+          statusId={task.status.id}
           priority={task.priority?.name}
           priorityIcon={task.priority?.icon}
           priorityId={task.priority?.id}

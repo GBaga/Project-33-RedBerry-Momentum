@@ -11,10 +11,22 @@ function TaskCard({
   priority,
   priorityIcon,
   priorityId,
+  statusId,
   totalComments,
 }) {
   const borderColor =
     priorityId === 1 ? "#08A508" : priorityId === 2 ? "#FFBE0B" : "#FA4D4D";
+
+  const statusColor =
+    statusId === 1
+      ? "#F7BC30"
+      : statusId === 2
+      ? "#FB5607"
+      : statusId === 3
+      ? "#FF006E"
+      : statusId === 4
+      ? "#3A86FF"
+      : "#212529";
 
   const depColor =
     departmentId === 1
@@ -59,7 +71,7 @@ function TaskCard({
 
   return (
     <button
-      style={{ border: `1px solid ${borderColor}` }}
+      style={{ border: `1px solid ${statusColor}` }}
       className="w-full max-w-sm p-6 bg-white border rounded-2xl shadow-sm  mx-auto cursor-pointer hover:scale-102 transition-all duration-300 ease-in-out"
     >
       <div className="flex justify-between items-center mb-7">
