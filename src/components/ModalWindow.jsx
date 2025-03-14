@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Flex, Modal } from "antd";
-import RegistrationForm from "./RegistrationForm";
 
 const ModalWindow = () => {
   const [openResponsive, setOpenResponsive] = useState(false);
@@ -33,8 +32,6 @@ const ModalWindow = () => {
       >
         <p>some contents...</p>
         <p>some contents...</p>
-
-        {/* <RegistrationForm /> */}
 
         <p>some contents...</p>
       </Modal>
