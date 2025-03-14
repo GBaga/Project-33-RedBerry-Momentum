@@ -3,8 +3,16 @@ import { publicAxios } from "../config/axios";
 import TaskCard from "./TaskCard";
 
 const fetchTasks = async () => {
-  const { data } = await publicAxios.get("/tasks");
-  return data;
+  try {
+    const response = await publicAxios.get("/tasks");
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error fetching tasks:",
+      error.response?.data || error.message
+    );
+    throw new Error(error.response?.data?.message || "Failed to fetch tasks");
+  }
 };
 
 const GetAllTasks = () => {
@@ -12,29 +20,32 @@ const GetAllTasks = () => {
     data: tasks,
     isLoading,
     isError,
+    error,
   } = useQuery({
     queryKey: ["tasks"],
     queryFn: fetchTasks,
+    staleTime: 60000,
+    retry: 2,
   });
 
-  if (isLoading) return <p>Loading...</p>;
-  if (isError) return <p>Error fetching tasks</p>;
+  if (isLoading) return <p>Loading tasks...</p>;
+  if (isError) return <p className="text-red-500">Error: {error.message}</p>;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-      {tasks.map((task) => (
+      {tasks?.map((task) => (
         <TaskCard
           key={task.id}
           name={task.name}
           description={task.description}
           dueDate={new Date(task.due_date)}
-          department={task.department.name}
-          departmentId={task.department.id}
-          employeeAvatar={task.employee.avatar}
-          status={task.status.name}
-          priority={task.priority.name}
-          priorityIcon={task.priority.icon}
-          priorityId={task.priority.id}
+          department={task.department?.name}
+          departmentId={task.department?.id}
+          employeeAvatar={task.employee?.avatar}
+          status={task.status?.name}
+          priority={task.priority?.name}
+          priorityIcon={task.priority?.icon}
+          priorityId={task.priority?.id}
           totalComments={task.total_comments}
         />
       ))}

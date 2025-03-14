@@ -5,9 +5,9 @@ const token = import.meta.env.VITE_API_TOKEN;
 const publicAxios = axios.create({
   baseURL: "https://momentum.redberryinternship.ge/api",
   headers: {
-    Authorization: `Bearer ${token}`,
-
+    Authorization: `Bearer ${token?.trim()}`,
     "Content-Type": "application/json",
+    Accept: "application/json",
   },
 });
 
