@@ -48,7 +48,7 @@ const ModalForm = () => {
           },
         }
       );
-      console.log("Employee created:", response.data);
+      alert("დაემატა ახალი თანამშრომელი:", response.data);
       form.resetFields();
       setOpen(false);
     } catch (error) {

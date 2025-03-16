@@ -5,6 +5,7 @@ import "./index.css";
 import Home from "./pages/Home.jsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import MainLayout from "./components/layouts/MainLayout.jsx";
+import NewTask from "./pages/NewTask.jsx";
 
 const queryClient = new QueryClient();
 
@@ -15,6 +16,7 @@ createRoot(document.getElementById("root")).render(
         <Routes>
           <Route element={<MainLayout />}>
             <Route path="/" element={<Home />} />
+            <Route path="/new-task" element={<NewTask />} />
           </Route>
         </Routes>
       </BrowserRouter>

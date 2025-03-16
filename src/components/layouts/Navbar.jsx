@@ -28,8 +28,8 @@ function Navbar() {
               <ModalForm styles={{ width: "100%" }} />
             </li>
             <li>
-              <Link to="/">
-                <BtnCreateNew />
+              <Link to="/new-task">
+                <BtnCreateNew title="+ შექმენი ახალი დავალება" />
               </Link>
             </li>
           </ul>
