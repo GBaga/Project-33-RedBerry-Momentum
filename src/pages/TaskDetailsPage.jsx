@@ -141,7 +141,7 @@ const TaskDetailsPage = () => {
         <div className="flex max-w-md">
           <div className="flex w-1/2">
             <img
-              src="../../public/assets/images/pie-chart-icon.png"
+              src="/assets/images/pie-chart-icon.png"
               alt="pie-chart-icon"
               className="w-6 h-6 mr-1"
             />
@@ -153,7 +153,7 @@ const TaskDetailsPage = () => {
         <div className="flex max-w-md">
           <div className="flex w-1/2">
             <img
-              src="../../public/assets/images/user-icon.png"
+              src="/assets/images/user-icon.png"
               alt="pie-chart-icon"
               className="w-6 h-6 mr-1"
             />
@@ -182,7 +182,7 @@ const TaskDetailsPage = () => {
         <div className="flex max-w-md">
           <div className="flex w-1/2">
             <img
-              src="../../public/assets/images/calendar-icon.png"
+              src="/assets/images/calendar-icon.png"
               alt="calendar-icon"
               className="w-6 h-6 mr-1"
             />
