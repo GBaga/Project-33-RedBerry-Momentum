@@ -212,7 +212,7 @@ const NewTask = () => {
                 <input
                   type="date"
                   {...register("deadline", { required: "აირჩიეთ დედლაინი" })}
-                  className="w-full p-2 border border-gray-300 rounded"
+                  className="w-1/2 p-2 border border-gray-300 rounded"
                 />
                 {errors.deadline && (
                   <p className="text-red-500 text-sm">

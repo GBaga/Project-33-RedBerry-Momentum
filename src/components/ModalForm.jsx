@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { publicAxios } from "../config/axios";
 import "./modalForm.css";
 import Loader from "./Loader";
+import BtnCreateNew from "./button/BtnCreateNew";
 
 const fetchDepartments = async () => {
   const { data } = await publicAxios.get("/departments");

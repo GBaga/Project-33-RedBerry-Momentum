@@ -5,6 +5,7 @@ import GetEmployeeList from "../components/GetEmployeeList";
 import GetStatusList from "../components/GetStatusList";
 import ModalWindow from "../components/ModalWindow";
 import TaskCard from "../components/TaskCard";
+import TaskDetailsPage from "./TaskDetailsPage";
 
 function Home() {
   return (

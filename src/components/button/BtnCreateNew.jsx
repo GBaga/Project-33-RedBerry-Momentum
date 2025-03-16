@@ -1,6 +1,6 @@
 import React from "react";
 
-const BtnCreateNew = ({ title, onClick }) => {
+const BtnCreateNew = ({ title }) => {
   return (
     <button
       type="submit"
