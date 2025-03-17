@@ -153,19 +153,19 @@ const GetAllTasks = () => {
       </h1>
       <div className="p-4 ">
         {/* Filters */}
-        <div className="flex flex-wrap max-w-[688px] w-full min-h-[44px] rounded-[10px] justify-between border border-[#DEE2E6] border-[1px] mb-6">
+        <div className="flex flex-wrap max-w-[688px] w-full min-h-[44px] rounded-[10px] justify-between border-[#DEE2E6] border-[1px] mb-6">
           {/* Department Filter Dropdown */}
           <div className="relative " ref={departmentRef}>
             <button
               onClick={() => setIsDepartmentOpen(!isDepartmentOpen)}
-              className="max-w-50 w-full flex items-center py-3 px-5 rounded cursor-pointer"
+              className="max-w-50 w-full flex items-center py-3 px-5 rounded cursor-pointer active:text-[#8338EC]"
             >
               {selectedDepartments.length > 0
                 ? `${selectedDepartments.length} მონიშნული`
                 : "დეპარტამენტი"}
 
               <img
-                src="../../public/assets/images/arrow-down-icon.png"
+                src="/assets/images/arrow-down-icon.png"
                 alt="arrow-down-icon"
                 className="h-2 ml-3"
               />
@@ -198,7 +198,7 @@ const GetAllTasks = () => {
                 ? `${selectedPriorities.length} მონიშნული`
                 : "პრიორიტეტი"}
               <img
-                src="../../public/assets/images/arrow-down-icon.png"
+                src="/assets/images/arrow-down-icon.png"
                 alt="arrow-down-icon"
                 className="h-2 ml-3"
               />
@@ -231,7 +231,7 @@ const GetAllTasks = () => {
                 ? `${selectedEmployees.length} მონიშნული`
                 : "თანამშრომელი"}
               <img
-                src="../../public/assets/images/arrow-down-icon.png"
+                src="/assets/images/arrow-down-icon.png"
                 alt="arrow-down-icon"
                 className="h-2 ml-3"
               />
@@ -302,7 +302,7 @@ const GetAllTasks = () => {
                   className="flex items-center ml-2 cursor-pointer"
                 >
                   <img
-                    src="../../public/assets/images/x-icon.png"
+                    src="/assets/images/x-icon.png"
                     alt="x-icon"
                     className="mx-auto"
                   />
@@ -327,7 +327,7 @@ const GetAllTasks = () => {
                   className="flex items-center ml-2 cursor-pointer"
                 >
                   <img
-                    src="../../public/assets/images/x-icon.png"
+                    src="/assets/images/x-icon.png"
                     alt="x-icon"
                     className="mx-auto"
                   />

@@ -232,3 +232,202 @@ const TaskDetailsPage = () => {
 };
 
 export default TaskDetailsPage;
+
+// import { React, useEffect, useState } from "react";
+// import { useParams } from "react-router-dom";
+// import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+// import { publicAxios } from "../config/axios";
+// import Loader from "../components/Loader";
+
+// const fetchTaskDetails = async (taskId) => {
+//   try {
+//     const response = await publicAxios.get(`/tasks/${taskId}`);
+//     return response.data;
+//   } catch (error) {
+//     throw new Error(
+//       error.response?.data?.message || "Failed to fetch task details"
+//     );
+//   }
+// };
+
+// const fetchComments = async (taskId) => {
+//   try {
+//     const response = await publicAxios.get(`/tasks/${taskId}/comments`);
+//     return response.data;
+//   } catch (error) {
+//     return [];
+//   }
+// };
+
+// const postComment = async ({ taskId, text, parentId = null }) => {
+//   const token = import.meta.env.VITE_API_TOKEN;
+
+//   try {
+//     const response = await publicAxios.post(
+//       `/tasks/${taskId}/comments`,
+//       { text, parent_id: parentId },
+//       {
+//         headers: {
+//           Accept: "application/json",
+//           Authorization: `Bearer ${token?.trim()}`, // Ensure the token is set
+//         },
+//       }
+//     );
+//     return response.data;
+//   } catch (error) {
+//     throw new Error(error.response?.data?.message || "Failed to post comment");
+//   }
+// };
+
+// const TaskDetailsPage = () => {
+//   const { taskId } = useParams();
+//   const queryClient = useQueryClient();
+//   const [commentText, setCommentText] = useState("");
+
+//   if (!taskId) {
+//     return <p className="text-red-500">Invalid Task ID</p>;
+//   }
+
+//   const {
+//     data: task,
+//     isLoading: taskLoading,
+//     isError: taskError,
+//   } = useQuery({
+//     queryKey: ["taskDetails", taskId],
+//     queryFn: () => fetchTaskDetails(taskId),
+//     enabled: !!taskId,
+//   });
+
+//   const { data: comments = [], isLoading: commentsLoading } = useQuery({
+//     queryKey: ["taskComments", taskId],
+//     queryFn: () => fetchComments(taskId),
+//     enabled: !!taskId,
+//   });
+
+//   const commentMutation = useMutation({
+//     mutationFn: postComment, // Use 'mutationFn' instead of passing directly
+//     onSuccess: () => {
+//       queryClient.invalidateQueries(["taskComments", taskId]);
+//       setCommentText("");
+//     },
+//   });
+
+//   if (taskLoading) return <Loader />;
+//   if (taskError)
+//     return <p className="text-red-500">Error fetching task details</p>;
+
+//   const borderColor =
+//     task.priority.id === 1
+//       ? "#08A508"
+//       : task.priority.id === 2
+//       ? "#FFBE0B"
+//       : "#FA4D4D";
+
+//   const depColor =
+//     task.department.id === 1
+//       ? "#6A77FD"
+//       : task.department.id === 2
+//       ? "#FF66A8"
+//       : task.department.id === 3
+//       ? "#4CC88D"
+//       : task.department.id === 4
+//       ? "#FD9A6A"
+//       : task.department.id === 5
+//       ? "#89B6FF"
+//       : task.department.id === 6
+//       ? "#FFD86D"
+//       : task.department.id === 7
+//       ? "#A27AFF"
+//       : "#CCCCCC";
+
+//   return (
+//     <div className="flex flex-col lg:flex-row space-y-8 lg:space-x-8 p-8">
+//       {/* Left Column */}
+//       <div className="min-w-1/2 flex-1 space-y-6 mb-30">
+//         <h2 className="font-semibold text-[34px]">{task.name}</h2>
+//         <p className="text-gray-600">{task.description}</p>
+
+//         {/* Status */}
+//         <div className="flex max-w-md">
+//           <p className="text-gray-600">სტატუსი: {task.status?.name || "N/A"}</p>
+//         </div>
+
+//         {/* Employee */}
+//         <div className="flex max-w-md">
+//           {task.employee?.avatar && (
+//             <img
+//               src={task.employee.avatar}
+//               alt={`${task.employee.name}'s avatar`}
+//               className="w-8 h-8 rounded-full mr-2"
+//             />
+//           )}
+//           <p className="text-gray-600">
+//             {task.employee?.name || "N/A"} {task.employee?.surname || "N/A"}
+//           </p>
+//         </div>
+
+//         {/* Due Date */}
+//         <div className="flex max-w-md">
+//           <p className="text-gray-600">
+//             დავალების ვადა:{" "}
+//             {new Date(task.due_date).toLocaleDateString() || "N/A"}
+//           </p>
+//         </div>
+//       </div>
+
+//       {/* Comments Section */}
+//       <div className="min-w-1/2 min-h-fit rounded-[10px] border border-gray-300 bg-gray-100 p-6 space-y-6">
+//         {/* Comment Input */}
+//         <textarea
+//           value={commentText}
+//           onChange={(e) => setCommentText(e.target.value)}
+//           placeholder="დაწერე კომენტარი..."
+//           className="w-full h-32 p-4 border border-gray-300 rounded-lg mt-2"
+//         ></textarea>
+//         <button
+//           onClick={() => commentMutation.mutate({ taskId, text: commentText })}
+//           disabled={!commentText.trim()}
+//           className="w-full bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 mt-2"
+//         >
+//           დააკომენტარე
+//         </button>
+
+//         {/* Comments List */}
+//         <div className="space-y-4 mt-6">
+//           {commentsLoading ? (
+//             <Loader />
+//           ) : comments.length > 0 ? (
+//             comments.map((comment) => (
+//               <div key={comment.id} className="flex items-start space-x-4">
+//                 <img
+//                   src={comment.author_avatar}
+//                   alt={comment.author_nickname || "Employee"}
+//                   className="w-8 h-8 rounded-full"
+//                 />
+//                 <div className="flex-1">
+//                   <p className="text-gray-800">{comment.text}</p>
+//                   <button
+//                     onClick={() =>
+//                       commentMutation.mutate({
+//                         taskId,
+//                         text: `Replying to: ${comment.text}`,
+//                         parentId: comment.id,
+//                       })
+//                     }
+//                     className="text-blue-500 text-sm"
+//                   >
+//                     უპასუხე
+//                   </button>
+//                 </div>
+//               </div>
+//             ))
+//           ) : (
+//             <p className="text-gray-500">No comments yet.</p>
+//           )}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default TaskDetailsPage;
