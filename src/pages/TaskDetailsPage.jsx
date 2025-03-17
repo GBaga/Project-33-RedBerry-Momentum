@@ -194,7 +194,7 @@ const TaskDetailsPage = () => {
         </div>
       </div>
 
-      <div className="min-w-1/2 h-[975px] rounded-[10px] border-[0.3px] border-[#DDD2FF] bg-[#F8F3FEA6] p-6 space-y-6">
+      <div className="min-w-1/2 min-h-fit rounded-[10px] border-[0.3px] border-[#DDD2FF] bg-[#F8F3FEA6] p-6 space-y-6">
         <textarea
           placeholder="დაწერე კომენტარი..."
           className="w-full h-32 p-4 border bg-white border-gray-300 rounded-lg mt-2"

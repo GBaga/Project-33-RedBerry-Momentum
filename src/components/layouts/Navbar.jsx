@@ -8,8 +8,8 @@ function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <nav className="border-gray-700">
-      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto px-4  h-32">
+    <nav className="border-gray-700 sm:px-[40px] md:px-[70px] lg:px-[100px] xl:px-[120px]">
+      <div className="max-w-[1920px] flex flex-wrap items-center justify-between mx-auto px-4  h-32">
         {/* Logo */}
         <Link to="/" className="flex items-center space-x-3 w-[210px] h-[38px]">
           <span className="self-center text-2xl font-semibold whitespace-nowrap">
