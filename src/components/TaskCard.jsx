@@ -85,7 +85,7 @@ function TaskCard({
     <button
       onClick={handleCardClick}
       style={{ border: `1px solid ${statusColor}` }}
-      className="w-full max-w-sm min-h-[240px]  p-6 bg-white border rounded-2xl shadow-sm mx-auto cursor-pointer hover:scale-102 transition-all duration-300 ease-in-out"
+      className="w-full max-w-sm min-h-[240px]  p-6 bg-white border rounded-2xl shadow-sm mx-auto cursor-pointer  hover:scale-102   transition-all duration-300 ease-in-out"
     >
       <div className="flex justify-between items-center mb-7">
         <div className="w-[184px] flex items-center gap-2">

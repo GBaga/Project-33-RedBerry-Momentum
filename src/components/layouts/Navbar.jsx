@@ -66,6 +66,7 @@ function Navbar() {
             ? "opacity-100 scale-100"
             : "opacity-0 scale-95 pointer-events-none"
         } md:hidden`}
+        onClick={() => setMenuOpen(false)}
       >
         <button
           onClick={() => setMenuOpen(false)}
@@ -101,13 +102,12 @@ function Navbar() {
 
             <ModalForm />
             <Link
+              to="/new-task"
               onClick={() => setMenuOpen(false)}
-              to="/detailed-history"
-              className="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900"
+              className="max-w-full "
             >
-              + შექმენი ახალი დავალება
+              <BtnCreateNew title="+ შექმენი ახალი დავალება" />
             </Link>
-
             <Link
               onClick={() => setMenuOpen(false)}
               to="/"
