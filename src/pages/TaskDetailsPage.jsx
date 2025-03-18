@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { publicAxios } from "../config/axios";
 import axios from "axios"; // Import axios
 import Loader from "../components/Loader";
+import Swal from "sweetalert2";
 
 const fetchTaskDetails = async (taskId) => {
   const response = await publicAxios.get(`/tasks/${taskId}`);
@@ -128,6 +129,19 @@ const TaskDetailsPage = () => {
       }));
       // Re-fetch the task to ensure the latest data is loaded
       queryClient.invalidateQueries(["task", taskId]);
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "სტატუსი წარმატებით შეიცვალა!",
+        showConfirmButton: false,
+        timer: 3000,
+        background: "#F8F3FE",
+        color: "#212529",
+        customClass: {
+          popup: "rounded-lg shadow-lg p-6",
+          title: "text-[#212529] font-semibold text-lg",
+        },
+      });
     },
   });
 
