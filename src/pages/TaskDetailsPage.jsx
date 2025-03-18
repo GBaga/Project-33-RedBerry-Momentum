@@ -91,51 +91,86 @@ const TaskDetailsPage = () => {
   };
 
   const renderComments = (comments) => {
-    return comments.map((comment) => (
-      <div
-        key={comment.id}
-        className="space-y-2 p-4 border rounded-lg bg-white"
-      >
+    const reversedComments = [...comments].reverse();
+
+    return reversedComments.map((comment) => (
+      <div key={comment.id} className="space-y-2 mb-6  rounded-lg ">
         <div className="flex items-start space-x-4">
           <img
             src={comment.author_avatar}
             alt={comment.author_nickname || "Employee"}
-            className="w-8 h-8 rounded-full"
+            className="w-8 h-8 rounded-full mr-3"
           />
-          <div className="flex-1">
-            <p className="text-gray-800">{comment.text}</p>
-            <button
-              onClick={() => handleReply(comment.id)}
-              className="text-blue-500 text-sm"
-            >
-              უპასუხე
-            </button>
+          <div className="flex-1 ">
+            <p className="mb-2 text-[#212529] font-medium text-[18px] leading-[100%] tracking-[0%]">
+              {comment.author_nickname || "Employee"}
+            </p>
 
-            {/* Reply Form */}
+            <p className="text-[#343A40] font-[350] text-[16px] leading-[100%] tracking-[0%]">
+              {comment.text}
+            </p>
+
+            {!comment.parent_id && (
+              <button
+                onClick={() => handleReply(comment.id)}
+                className=" text-[#8338EC] font-normal text-[12px] leading-[100%] tracking-[0%] flex items-center mt-4 mb-6"
+              >
+                <img
+                  src="/assets/images/arrow-left-icon.png"
+                  alt="arrow-icon"
+                  className="mr-1.5"
+                />
+                უპასუხე
+              </button>
+            )}
+
             {replyingTo === comment.id && (
-              <div className="mt-2">
+              <div className="relative mt-2 mb-5">
                 <textarea
                   value={replyText[comment.id] || ""}
                   onChange={(e) =>
                     setReplyText({ ...replyText, [comment.id]: e.target.value })
                   }
                   placeholder="უპასუხე..."
-                  className="w-full h-20 p-2 border border-gray-300 rounded-lg"
+                  className="w-full  h-32 relative p-4 border bg-white border-gray-300 rounded-lg"
                 ></textarea>
                 <button
                   onClick={() => handleReplySubmit(comment.id)}
                   disabled={!replyText[comment.id]?.trim()}
-                  className="w-full bg-green-500 text-white p-2 rounded-lg hover:bg-green-600 mt-2"
+                  className="w-fit h-fit px-5 absolute bottom-4 right-5 rounded-[20px] bg-[#8338EC] text-white p-2  hover:bg-[#B588F4]"
                 >
                   პასუხის დამატება
                 </button>
               </div>
             )}
 
-            {/* Render Replies */}
             {comment.sub_comments && comment.sub_comments.length > 0 && (
-              <div className="ml-6 mt-2">
-                {renderComments(comment.sub_comments)}
+              <div className="">
+                {comment.sub_comments.map((subComment) => (
+                  <div
+                    key={subComment.id}
+                    className="space-y-2 mb-5 rounded-lg  bg-opacity "
+                  >
+                    <div className="flex items-start space-x-4">
+                      <img
+                        src={subComment.author_avatar}
+                        alt={subComment.author_nickname || "Employee"}
+                        className="w-8 h-8 rounded-full mr-3"
+                      />
+                      <div>
+                        <p className="mb-2 text-[#212529] font-medium text-[18px] leading-[100%] tracking-[0%]">
+                          {subComment.author_nickname || "Employee"}
+                        </p>
+
+                        <div className="flex-1">
+                          <p className="text-[#343A40] font-[350] text-[16px] leading-[100%] tracking-[0%]">
+                            {subComment.text}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
           </div>
@@ -176,7 +211,6 @@ const TaskDetailsPage = () => {
 
   return (
     <div className="flex flex-col lg:flex-row space-y-8 lg:space-x-8 p-8">
-      {/* Left Column */}
       <div className="min-w-1/2 flex-1 space-y-6 mb-30">
         <div className="flex justify-between items-center mb-7">
           <div className="w-[184px] flex items-center gap-2">
@@ -271,25 +305,30 @@ const TaskDetailsPage = () => {
         </div>
       </div>
 
-      <div className="min-w-1/2 bg-gray-100 p-6 rounded-lg space-y-6">
-        <textarea
-          value={commentText}
-          onChange={(e) => setCommentText(e.target.value)}
-          placeholder="დაწერე კომენტარი..."
-          className="w-full h-32 p-4 border border-gray-300 rounded-lg"
-        ></textarea>
-        <button
-          onClick={() => commentMutation.mutate({ taskId, text: commentText })}
-          disabled={!commentText.trim()}
-          className="w-full bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
-        >
-          დააკომენტარე
-        </button>
-        <div className="flex gap-x-2 items-center">
+      <div className="min-w-1/2  bg-[#F8F3FEA6] bg-opacity-65 p-6 rounded-lg py-11 px-10">
+        <div className="relative">
+          <textarea
+            value={commentText}
+            onChange={(e) => setCommentText(e.target.value)}
+            placeholder="დაწერე კომენტარი..."
+            className="w-full  h-32 relative p-4 border bg-white border-gray-300 rounded-lg"
+          ></textarea>
+          <button
+            onClick={() =>
+              commentMutation.mutate({ taskId, text: commentText })
+            }
+            disabled={!commentText.trim()}
+            className="w-38 h-fit px-5 absolute bottom-4 right-5 rounded-[20px] bg-[#8338EC] text-white p-2  hover:bg-[#B588F4]"
+          >
+            დააკომენტარე
+          </button>
+        </div>
+
+        <div className="flex gap-x-2 items-center mt-16 mb-10">
           <h3 className="font-medium text-lg leading-tight tracking-tight">
             კომენტარები
           </h3>
-          <span className="w-[30px] h-[22px] gap-[10px] py-[2.5px]  rounded-[30px] text-center bg-[#8338EC] font-medium text-sm leading-tight tracking-tight text-white">
+          <span className="w-[30px] h-[22px] gap-[10px] py-[2.5px] px rounded-[30px] text-center bg-[#8338EC] font-medium text-sm leading-tight tracking-tight text-white">
             {totalComments}
           </span>
         </div>
