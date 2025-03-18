@@ -5,6 +5,7 @@ import Loader from "../components/Loader";
 import BtnCreateNew from "../components/button/BtnCreateNew";
 import ReactSelect from "react-select";
 import { useState } from "react";
+import Swal from "sweetalert2";
 
 const fetchStatuses = async () => {
   const { data } = await publicAxios.get("/statuses");
@@ -32,7 +33,7 @@ const NewTask = () => {
     handleSubmit,
     formState: { errors },
     reset,
-    control, // Add control for using Controller with ReactSelect
+    control,
   } = useForm();
 
   const mutation = useMutation({
@@ -41,22 +42,58 @@ const NewTask = () => {
       reset({
         title: "",
         description: "",
-        priority: null, // Reset the priority to null
+        priority: null,
         status: "",
         department: "",
         responsiblePerson: "",
         deadline: "",
       });
-      setValue("priority", null); // Explicitly reset the priority field using setValue
-      alert("დავალება წარმატებით შეიქმნა!");
+      setValue("priority", null);
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "მონაცემები წარმატებით შეინახა!",
+        showConfirmButton: false,
+        timer: 3000,
+        background: "#F8F3FE",
+        color: "#212529",
+        customClass: {
+          popup: "rounded-lg shadow-lg p-6",
+          title: "text-[#212529] font-semibold text-lg",
+        },
+      });
     },
     onError: (error) => {
       if (error.response) {
         console.error("Error creating task:", error.response.data);
-        alert(`Failed to create task: ${error.response.data.message}`);
+        Swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: `მონაცემები ვერ შეინახა: ${error.response.data.message}`,
+          showConfirmButton: false,
+          timer: 3000,
+          background: "#F8F3FE",
+          color: "#212529",
+          customClass: {
+            popup: "rounded-lg shadow-lg p-6",
+            title: "text-[#212529] font-semibold text-lg",
+          },
+        });
       } else {
         console.error("Error creating task:", error.message);
-        alert("Failed to create task. Please try again.");
+        Swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: "მონაცემები ვერ შეინახა. ხელახლა სცადეთ.",
+          showConfirmButton: false,
+          timer: 3000,
+          background: "#F8F3FE",
+          color: "#212529",
+          customClass: {
+            popup: "rounded-lg shadow-lg p-6",
+            title: "text-[#212529] font-semibold text-lg",
+          },
+        });
       }
     },
   });
