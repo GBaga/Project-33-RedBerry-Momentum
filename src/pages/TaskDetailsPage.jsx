@@ -286,8 +286,12 @@ const TaskDetailsPage = () => {
           დააკომენტარე
         </button>
         <div className="flex gap-x-2 items-center">
-          <h3 className="text-xl font-semibold text-gray-800">კომენტარები</h3>
-          <span>{totalComments}</span>
+          <h3 className="font-medium text-lg leading-tight tracking-tight">
+            კომენტარები
+          </h3>
+          <span className="w-[30px] h-[22px] gap-[10px] py-[2.5px]  rounded-[30px] text-center bg-[#8338EC] font-medium text-sm leading-tight tracking-tight text-white">
+            {totalComments}
+          </span>
         </div>
         <div className="space-y-4">
           {commentsLoading ? <Loader /> : renderComments(comments)}
