@@ -4,7 +4,7 @@ import { publicAxios } from "../config/axios";
 import Loader from "../components/Loader";
 import BtnCreateNew from "../components/button/BtnCreateNew";
 import ReactSelect from "react-select";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 const fetchStatuses = async () => {
   const { data } = await publicAxios.get("/statuses");
@@ -83,6 +83,14 @@ const NewTask = () => {
     queryFn: fetchPriorities,
   });
 
+  const [selectedDepartment, setSelectedDepartment] = useState(null);
+
+  const filteredEmployees = selectedDepartment
+    ? employees.filter(
+        (employee) => employee.department.id === selectedDepartment
+      )
+    : employees;
+
   const onSubmit = (data) => {
     mutation.mutate({
       name: data.title,
@@ -132,11 +140,10 @@ const NewTask = () => {
     label: department.name,
   }));
 
-  const optionsEmployees = employees.map((employee) => ({
+  const optionsEmployees = filteredEmployees.map((employee) => ({
     value: employee.id,
     label: (
       <div className="flex items-center">
-        {/* Check if avatar exists, otherwise render a placeholder */}
         {employee.avatar ? (
           <img
             src={employee.avatar}
@@ -145,14 +152,12 @@ const NewTask = () => {
           />
         ) : (
           <div className="mr-2 w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
-            {/* Placeholder for name initials */}
             <span className="text-sm text-white">
               {employee.name.charAt(0)}
               {employee.surname.charAt(0)}
             </span>
           </div>
         )}
-        {/* Render full name */}
         {employee.name} {employee.surname}
       </div>
     ),
@@ -271,8 +276,9 @@ const NewTask = () => {
                         optionsDepartments.find(
                           (option) => option.value === field.value
                         ) || null
-                      } // Ensure value is reset to null
+                      }
                       onChange={(selectedOption) => {
+                        setSelectedDepartment(selectedOption?.value); // Update selected department
                         field.onChange(selectedOption?.value);
                       }}
                       placeholder="აირჩიეთ დეპარტამენტი"
@@ -280,6 +286,7 @@ const NewTask = () => {
                     />
                   )}
                 />
+
                 {errors.department && (
                   <p className="text-red-500 text-sm">
                     {errors.department.message}
