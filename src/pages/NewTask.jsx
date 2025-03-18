@@ -4,6 +4,7 @@ import { publicAxios } from "../config/axios";
 import Loader from "../components/Loader";
 import BtnCreateNew from "../components/button/BtnCreateNew";
 import ReactSelect from "react-select";
+import { useState, useEffect } from "react";
 
 const fetchStatuses = async () => {
   const { data } = await publicAxios.get("/statuses");
@@ -111,12 +112,48 @@ const NewTask = () => {
   }
 
   // Prepare options for ReactSelect dropdown
-  const options = priorities.map((priority) => ({
+  const optionsPriorities = priorities.map((priority) => ({
     value: priority.id,
     label: (
       <div className="flex items-center">
         <img src={priority.icon} alt={priority.name} className="mr-2" />
         {priority.name}
+      </div>
+    ),
+  }));
+
+  const optionsStatuses = statuses.map((status) => ({
+    value: status.id,
+    label: status.name,
+  }));
+
+  const optionsDepartments = departments.map((department) => ({
+    value: department.id,
+    label: department.name,
+  }));
+
+  const optionsEmployees = employees.map((employee) => ({
+    value: employee.id,
+    label: (
+      <div className="flex items-center">
+        {/* Check if avatar exists, otherwise render a placeholder */}
+        {employee.avatar ? (
+          <img
+            src={employee.avatar}
+            alt={employee.name}
+            className="mr-2 w-8 h-8 rounded-full"
+          />
+        ) : (
+          <div className="mr-2 w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
+            {/* Placeholder for name initials */}
+            <span className="text-sm text-white">
+              {employee.name.charAt(0)}
+              {employee.surname.charAt(0)}
+            </span>
+          </div>
+        )}
+        {/* Render full name */}
+        {employee.name} {employee.surname}
       </div>
     ),
   }));
@@ -165,15 +202,16 @@ const NewTask = () => {
                     render={({ field }) => (
                       <ReactSelect
                         {...field}
-                        options={options}
+                        options={optionsPriorities}
                         value={
-                          options.find(
+                          optionsPriorities.find(
                             (option) => option.value === field.value
                           ) || null
                         } // Ensure value is reset to null
                         onChange={(selectedOption) => {
                           field.onChange(selectedOption?.value); // Update form state with selected priority id
                         }}
+                        placeholder="აირჩიეთ პრიორიტეტი"
                         className="w-full"
                       />
                     )}
@@ -187,17 +225,27 @@ const NewTask = () => {
 
                 <div>
                   <label className="block font-medium">სტატუსი</label>
-                  <select
-                    {...register("status", { required: "აირჩიეთ სტატუსი" })}
-                    className="w-full p-2 border border-gray-300 rounded"
-                  >
-                    <option value="">აირჩიეთ</option>
-                    {statuses.map((status) => (
-                      <option key={status.id} value={status.id}>
-                        {status.name}
-                      </option>
-                    ))}
-                  </select>
+                  <Controller
+                    name="status"
+                    control={control}
+                    rules={{ required: "აირჩიეთ სტატუსი" }}
+                    render={({ field }) => (
+                      <ReactSelect
+                        {...field}
+                        options={optionsStatuses}
+                        value={
+                          optionsStatuses.find(
+                            (option) => option.value === field.value
+                          ) || null
+                        } // Ensure value is reset to null
+                        onChange={(selectedOption) => {
+                          field.onChange(selectedOption?.value);
+                        }}
+                        placeholder="აირჩიეთ სტატუსი"
+                        className="w-full"
+                      />
+                    )}
+                  />
                   {errors.status && (
                     <p className="text-red-500 text-sm">
                       {errors.status.message}
@@ -211,19 +259,27 @@ const NewTask = () => {
             <div className="space-y-4">
               <div>
                 <label className="block font-medium">დეპარტამენტი</label>
-                <select
-                  {...register("department", {
-                    required: "აირჩიეთ დეპარტამენტი",
-                  })}
-                  className="w-full p-2 border border-gray-300 rounded"
-                >
-                  <option value="">აირჩიეთ</option>
-                  {departments.map((department) => (
-                    <option key={department.id} value={department.id}>
-                      {department.name}
-                    </option>
-                  ))}
-                </select>
+                <Controller
+                  name="department"
+                  control={control}
+                  rules={{ required: "აირჩიეთ დეპარტამენტი" }}
+                  render={({ field }) => (
+                    <ReactSelect
+                      {...field}
+                      options={optionsDepartments}
+                      value={
+                        optionsDepartments.find(
+                          (option) => option.value === field.value
+                        ) || null
+                      } // Ensure value is reset to null
+                      onChange={(selectedOption) => {
+                        field.onChange(selectedOption?.value);
+                      }}
+                      placeholder="აირჩიეთ დეპარტამენტი"
+                      className="w-full"
+                    />
+                  )}
+                />
                 {errors.department && (
                   <p className="text-red-500 text-sm">
                     {errors.department.message}
@@ -232,19 +288,27 @@ const NewTask = () => {
               </div>
               <div>
                 <label className="block font-medium">პასუხისმგებელი პირი</label>
-                <select
-                  {...register("responsiblePerson", {
-                    required: "აირჩიეთ პასუხისმგებელი პირი",
-                  })}
-                  className="w-full p-2 border border-gray-300 rounded"
-                >
-                  <option value="">აირჩიეთ</option>
-                  {employees.map((employee) => (
-                    <option key={employee.id} value={employee.id}>
-                      {employee.name} {employee.surname}
-                    </option>
-                  ))}
-                </select>
+                <Controller
+                  name="responsiblePerson"
+                  control={control}
+                  rules={{ required: "აირჩიეთ პასუხისმგებელი პირი" }}
+                  render={({ field }) => (
+                    <ReactSelect
+                      {...field}
+                      options={optionsEmployees}
+                      value={
+                        optionsEmployees.find(
+                          (option) => option.value === field.value
+                        ) || null
+                      } // Ensure value is reset to null
+                      onChange={(selectedOption) => {
+                        field.onChange(selectedOption?.value);
+                      }}
+                      placeholder="აირჩიეთ პასუხისმგებელი პირი"
+                      className="w-full"
+                    />
+                  )}
+                />
                 {errors.responsiblePerson && (
                   <p className="text-red-500 text-sm">
                     {errors.responsiblePerson.message}
