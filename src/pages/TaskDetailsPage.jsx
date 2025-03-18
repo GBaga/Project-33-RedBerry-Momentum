@@ -1,77 +1,152 @@
-import { React, useEffect, useState } from "react";
+import { React, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { publicAxios } from "../config/axios";
 import Loader from "../components/Loader";
 
-// Fetch Task Details based on taskId from the URL
 const fetchTaskDetails = async (taskId) => {
-  try {
-    const response = await publicAxios.get(`/tasks/${taskId}`);
-    console.log("API Response:", response.data); // Log the response
-    return response.data;
-  } catch (error) {
-    console.error(
-      "Error fetching task details:",
-      error.response?.data || error.message
-    );
-    throw new Error(
-      error.response?.data?.message || "Failed to fetch task details"
-    );
-  }
+  const response = await publicAxios.get(`/tasks/${taskId}`);
+  return response.data;
 };
 
-// Fetch Comments based on taskId
 const fetchComments = async (taskId) => {
-  try {
-    const response = await publicAxios.get(`/tasks/${taskId}/comments`);
-    console.log("Comments for Task ID:", taskId);
-    return response.data; // Return the comments data
-  } catch (error) {
-    console.error(
-      "Error fetching comments:",
-      error.response?.data || error.message
-    );
-    return []; // Return an empty array in case of an error
-  }
+  const response = await publicAxios.get(`/tasks/${taskId}/comments`);
+  return response.data;
+};
+
+const postComment = async ({ taskId, text, parentId = null }) => {
+  const token = import.meta.env.VITE_API_TOKEN;
+  const response = await publicAxios.post(
+    `/tasks/${taskId}/comments`,
+    { text, parent_id: parentId },
+    {
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token?.trim()}`,
+      },
+    }
+  );
+  return response.data;
+};
+
+const countTotalComments = (comments) => {
+  let total = comments.length;
+  comments.forEach((comment) => {
+    if (comment.sub_comments && comment.sub_comments.length > 0) {
+      total += countTotalComments(comment.sub_comments); // Recursively count sub-comments
+    }
+  });
+  return total;
 };
 
 const TaskDetailsPage = () => {
   const { taskId } = useParams();
-  const [comments, setComments] = useState([]); // State to store comments
+  const queryClient = useQueryClient();
+  const [commentText, setCommentText] = useState("");
+  const [replyingTo, setReplyingTo] = useState(null);
+  const [replyText, setReplyText] = useState({});
 
-  useEffect(() => {
-    if (taskId) {
-      fetchComments(taskId).then((data) => setComments(data)); // Fetch comments only when taskId is available
-    }
-  }, [taskId]);
-
-  if (!taskId) {
-    return <p className="text-red-500">Invalid Task ID</p>; // Handle missing taskId
-  }
-
-  // Use the object format for the useQuery hook to fetch task details
   const {
     data: task,
     isLoading: taskLoading,
     isError: taskError,
-    error: taskErrorMsg,
   } = useQuery({
     queryKey: ["taskDetails", taskId],
     queryFn: () => fetchTaskDetails(taskId),
     enabled: !!taskId,
   });
 
-  if (taskLoading) return <Loader />;
-  if (taskError) {
-    return (
-      <p className="text-red-500">
-        Error fetching task details: {taskErrorMsg.message}
-      </p>
-    );
-  }
+  const { data: comments = [], isLoading: commentsLoading } = useQuery({
+    queryKey: ["taskComments", taskId],
+    queryFn: () => fetchComments(taskId),
+    enabled: !!taskId,
+  });
 
-  console.log("Task data:", task);
+  const commentMutation = useMutation({
+    mutationFn: postComment,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["taskComments", taskId]);
+      setCommentText("");
+      setReplyingTo(null);
+      setReplyText({});
+    },
+  });
+
+  const handleReply = (parentId) => {
+    setReplyingTo(parentId);
+    setReplyText((prev) => ({ ...prev, [parentId]: "" }));
+  };
+
+  const handleReplySubmit = (parentId) => {
+    if (!replyText[parentId]?.trim()) return;
+    commentMutation.mutate(
+      { taskId, text: replyText[parentId], parentId },
+      {
+        onSuccess: () => {
+          setReplyText((prev) => ({ ...prev, [parentId]: "" }));
+          setReplyingTo(null);
+        },
+      }
+    );
+  };
+
+  const renderComments = (comments) => {
+    return comments.map((comment) => (
+      <div
+        key={comment.id}
+        className="space-y-2 p-4 border rounded-lg bg-white"
+      >
+        <div className="flex items-start space-x-4">
+          <img
+            src={comment.author_avatar}
+            alt={comment.author_nickname || "Employee"}
+            className="w-8 h-8 rounded-full"
+          />
+          <div className="flex-1">
+            <p className="text-gray-800">{comment.text}</p>
+            <button
+              onClick={() => handleReply(comment.id)}
+              className="text-blue-500 text-sm"
+            >
+              უპასუხე
+            </button>
+
+            {/* Reply Form */}
+            {replyingTo === comment.id && (
+              <div className="mt-2">
+                <textarea
+                  value={replyText[comment.id] || ""}
+                  onChange={(e) =>
+                    setReplyText({ ...replyText, [comment.id]: e.target.value })
+                  }
+                  placeholder="უპასუხე..."
+                  className="w-full h-20 p-2 border border-gray-300 rounded-lg"
+                ></textarea>
+                <button
+                  onClick={() => handleReplySubmit(comment.id)}
+                  disabled={!replyText[comment.id]?.trim()}
+                  className="w-full bg-green-500 text-white p-2 rounded-lg hover:bg-green-600 mt-2"
+                >
+                  პასუხის დამატება
+                </button>
+              </div>
+            )}
+
+            {/* Render Replies */}
+            {comment.sub_comments && comment.sub_comments.length > 0 && (
+              <div className="ml-6 mt-2">
+                {renderComments(comment.sub_comments)}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    ));
+  };
+
+  if (taskLoading) return <Loader />;
+  if (taskError)
+    return <p className="text-red-500">Error fetching task details</p>;
 
   const borderColor =
     task.priority.id === 1
@@ -96,6 +171,8 @@ const TaskDetailsPage = () => {
       : task.department.id === 7
       ? "#A27AFF"
       : "#CCCCCC";
+
+  const totalComments = countTotalComments(comments);
 
   return (
     <div className="flex flex-col lg:flex-row space-y-8 lg:space-x-8 p-8">
@@ -194,37 +271,26 @@ const TaskDetailsPage = () => {
         </div>
       </div>
 
-      <div className="min-w-1/2 min-h-fit rounded-[10px] border-[0.3px] border-[#DDD2FF] bg-[#F8F3FEA6] p-6 space-y-6">
+      <div className="min-w-1/2 bg-gray-100 p-6 rounded-lg space-y-6">
         <textarea
+          value={commentText}
+          onChange={(e) => setCommentText(e.target.value)}
           placeholder="დაწერე კომენტარი..."
-          className="w-full h-32 p-4 border bg-white border-gray-300 rounded-lg mt-2"
+          className="w-full h-32 p-4 border border-gray-300 rounded-lg"
         ></textarea>
-        <button className="w-full bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 mt-2">
+        <button
+          onClick={() => commentMutation.mutate({ taskId, text: commentText })}
+          disabled={!commentText.trim()}
+          className="w-full bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
+        >
           დააკომენტარე
         </button>
-
         <div className="flex gap-x-2 items-center">
           <h3 className="text-xl font-semibold text-gray-800">კომენტარები</h3>
-          <span>{comments.length}</span>
+          <span>{totalComments}</span>
         </div>
-
-        {/* Comments List */}
-        <div className="space-y-4 mt-6">
-          {comments.map((comment, index) => (
-            <div key={index} className="flex items-start space-x-4">
-              <img
-                src={comment.author_avatar}
-                alt={comment.author_name || "Employee"}
-                className="w-8 h-8 rounded-full"
-              />
-              <div className="flex-1">
-                <p className="text-gray-800">
-                  {comment.text || "No comment text"}
-                </p>
-                <button className="text-blue-500 text-sm">უპასუხე</button>
-              </div>
-            </div>
-          ))}
+        <div className="space-y-4">
+          {commentsLoading ? <Loader /> : renderComments(comments)}
         </div>
       </div>
     </div>
@@ -232,202 +298,3 @@ const TaskDetailsPage = () => {
 };
 
 export default TaskDetailsPage;
-
-// import { React, useEffect, useState } from "react";
-// import { useParams } from "react-router-dom";
-// import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-// import { publicAxios } from "../config/axios";
-// import Loader from "../components/Loader";
-
-// const fetchTaskDetails = async (taskId) => {
-//   try {
-//     const response = await publicAxios.get(`/tasks/${taskId}`);
-//     return response.data;
-//   } catch (error) {
-//     throw new Error(
-//       error.response?.data?.message || "Failed to fetch task details"
-//     );
-//   }
-// };
-
-// const fetchComments = async (taskId) => {
-//   try {
-//     const response = await publicAxios.get(`/tasks/${taskId}/comments`);
-//     return response.data;
-//   } catch (error) {
-//     return [];
-//   }
-// };
-
-// const postComment = async ({ taskId, text, parentId = null }) => {
-//   const token = import.meta.env.VITE_API_TOKEN;
-
-//   try {
-//     const response = await publicAxios.post(
-//       `/tasks/${taskId}/comments`,
-//       { text, parent_id: parentId },
-//       {
-//         headers: {
-//           Accept: "application/json",
-//           Authorization: `Bearer ${token?.trim()}`, // Ensure the token is set
-//         },
-//       }
-//     );
-//     return response.data;
-//   } catch (error) {
-//     throw new Error(error.response?.data?.message || "Failed to post comment");
-//   }
-// };
-
-// const TaskDetailsPage = () => {
-//   const { taskId } = useParams();
-//   const queryClient = useQueryClient();
-//   const [commentText, setCommentText] = useState("");
-
-//   if (!taskId) {
-//     return <p className="text-red-500">Invalid Task ID</p>;
-//   }
-
-//   const {
-//     data: task,
-//     isLoading: taskLoading,
-//     isError: taskError,
-//   } = useQuery({
-//     queryKey: ["taskDetails", taskId],
-//     queryFn: () => fetchTaskDetails(taskId),
-//     enabled: !!taskId,
-//   });
-
-//   const { data: comments = [], isLoading: commentsLoading } = useQuery({
-//     queryKey: ["taskComments", taskId],
-//     queryFn: () => fetchComments(taskId),
-//     enabled: !!taskId,
-//   });
-
-//   const commentMutation = useMutation({
-//     mutationFn: postComment, // Use 'mutationFn' instead of passing directly
-//     onSuccess: () => {
-//       queryClient.invalidateQueries(["taskComments", taskId]);
-//       setCommentText("");
-//     },
-//   });
-
-//   if (taskLoading) return <Loader />;
-//   if (taskError)
-//     return <p className="text-red-500">Error fetching task details</p>;
-
-//   const borderColor =
-//     task.priority.id === 1
-//       ? "#08A508"
-//       : task.priority.id === 2
-//       ? "#FFBE0B"
-//       : "#FA4D4D";
-
-//   const depColor =
-//     task.department.id === 1
-//       ? "#6A77FD"
-//       : task.department.id === 2
-//       ? "#FF66A8"
-//       : task.department.id === 3
-//       ? "#4CC88D"
-//       : task.department.id === 4
-//       ? "#FD9A6A"
-//       : task.department.id === 5
-//       ? "#89B6FF"
-//       : task.department.id === 6
-//       ? "#FFD86D"
-//       : task.department.id === 7
-//       ? "#A27AFF"
-//       : "#CCCCCC";
-
-//   return (
-//     <div className="flex flex-col lg:flex-row space-y-8 lg:space-x-8 p-8">
-//       {/* Left Column */}
-//       <div className="min-w-1/2 flex-1 space-y-6 mb-30">
-//         <h2 className="font-semibold text-[34px]">{task.name}</h2>
-//         <p className="text-gray-600">{task.description}</p>
-
-//         {/* Status */}
-//         <div className="flex max-w-md">
-//           <p className="text-gray-600">სტატუსი: {task.status?.name || "N/A"}</p>
-//         </div>
-
-//         {/* Employee */}
-//         <div className="flex max-w-md">
-//           {task.employee?.avatar && (
-//             <img
-//               src={task.employee.avatar}
-//               alt={`${task.employee.name}'s avatar`}
-//               className="w-8 h-8 rounded-full mr-2"
-//             />
-//           )}
-//           <p className="text-gray-600">
-//             {task.employee?.name || "N/A"} {task.employee?.surname || "N/A"}
-//           </p>
-//         </div>
-
-//         {/* Due Date */}
-//         <div className="flex max-w-md">
-//           <p className="text-gray-600">
-//             დავალების ვადა:{" "}
-//             {new Date(task.due_date).toLocaleDateString() || "N/A"}
-//           </p>
-//         </div>
-//       </div>
-
-//       {/* Comments Section */}
-//       <div className="min-w-1/2 min-h-fit rounded-[10px] border border-gray-300 bg-gray-100 p-6 space-y-6">
-//         {/* Comment Input */}
-//         <textarea
-//           value={commentText}
-//           onChange={(e) => setCommentText(e.target.value)}
-//           placeholder="დაწერე კომენტარი..."
-//           className="w-full h-32 p-4 border border-gray-300 rounded-lg mt-2"
-//         ></textarea>
-//         <button
-//           onClick={() => commentMutation.mutate({ taskId, text: commentText })}
-//           disabled={!commentText.trim()}
-//           className="w-full bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 mt-2"
-//         >
-//           დააკომენტარე
-//         </button>
-
-//         {/* Comments List */}
-//         <div className="space-y-4 mt-6">
-//           {commentsLoading ? (
-//             <Loader />
-//           ) : comments.length > 0 ? (
-//             comments.map((comment) => (
-//               <div key={comment.id} className="flex items-start space-x-4">
-//                 <img
-//                   src={comment.author_avatar}
-//                   alt={comment.author_nickname || "Employee"}
-//                   className="w-8 h-8 rounded-full"
-//                 />
-//                 <div className="flex-1">
-//                   <p className="text-gray-800">{comment.text}</p>
-//                   <button
-//                     onClick={() =>
-//                       commentMutation.mutate({
-//                         taskId,
-//                         text: `Replying to: ${comment.text}`,
-//                         parentId: comment.id,
-//                       })
-//                     }
-//                     className="text-blue-500 text-sm"
-//                   >
-//                     უპასუხე
-//                   </button>
-//                 </div>
-//               </div>
-//             ))
-//           ) : (
-//             <p className="text-gray-500">No comments yet.</p>
-//           )}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default TaskDetailsPage;

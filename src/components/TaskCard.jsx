@@ -52,8 +52,6 @@ function TaskCard({
   const statusColor = colors.status[statusId] || colors.status.default;
   const depColor = colors.department[departmentId] || colors.department.default;
 
-  console.log("colors", departmentId, statusId, priorityId);
-
   const georgianMonths = [
     "იანვ",
     "თებ",

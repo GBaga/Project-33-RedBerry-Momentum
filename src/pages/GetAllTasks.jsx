@@ -275,7 +275,7 @@ const GetAllTasks = () => {
                   className="flex items-center ml-2 cursor-pointer"
                 >
                   <img
-                    src="../../public/assets/images/x-icon.png"
+                    src="./assets/images/x-icon.png"
                     alt="x-icon"
                     className="mx-auto"
                   />
