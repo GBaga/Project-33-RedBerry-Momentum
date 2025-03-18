@@ -2,11 +2,17 @@ import { React, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { publicAxios } from "../config/axios";
+import axios from "axios"; // Import axios
 import Loader from "../components/Loader";
 
 const fetchTaskDetails = async (taskId) => {
   const response = await publicAxios.get(`/tasks/${taskId}`);
   return response.data;
+};
+
+const fetchStatuses = async () => {
+  const { data } = await publicAxios.get("/statuses");
+  return data;
 };
 
 const fetchComments = async (taskId) => {
@@ -45,23 +51,28 @@ const TaskDetailsPage = () => {
   const [commentText, setCommentText] = useState("");
   const [replyingTo, setReplyingTo] = useState(null);
   const [replyText, setReplyText] = useState({});
-
   const {
     data: task,
-    isLoading: taskLoading,
-    isError: taskError,
+    isLoading: isTaskLoading,
+    isError: isTaskError,
   } = useQuery({
-    queryKey: ["taskDetails", taskId],
+    queryKey: ["task", taskId],
     queryFn: () => fetchTaskDetails(taskId),
     enabled: !!taskId,
   });
-
+  const {
+    data: statuses,
+    isLoading: isStatusesLoading,
+    isError: isStatusesError,
+  } = useQuery({
+    queryKey: ["statuses"],
+    queryFn: fetchStatuses,
+  });
   const { data: comments = [], isLoading: commentsLoading } = useQuery({
     queryKey: ["taskComments", taskId],
     queryFn: () => fetchComments(taskId),
     enabled: !!taskId,
   });
-
   const commentMutation = useMutation({
     mutationFn: postComment,
     onSuccess: () => {
@@ -90,11 +101,48 @@ const TaskDetailsPage = () => {
     );
   };
 
+  const updateStatusMutation = useMutation({
+    mutationFn: async (newStatusId) => {
+      const token = import.meta.env.VITE_API_TOKEN; // Define token here
+      const response = await axios.put(
+        `https://momentum.redberryinternship.ge/api/tasks/${taskId}`,
+        { status_id: newStatusId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return response.data;
+    },
+    onSuccess: (data) => {
+      // Manually update the cache with the new status
+      queryClient.setQueryData(["task", taskId], (oldData) => ({
+        ...oldData,
+        status: {
+          id: data.status.id,
+          name: data.status.name,
+        },
+      }));
+      // Re-fetch the task to ensure the latest data is loaded
+      queryClient.invalidateQueries(["task", taskId]);
+    },
+  });
+
+  const handleStatusChange = (event) => {
+    const newStatusId = Number(event.target.value);
+    updateStatusMutation.mutate(newStatusId);
+  };
+
+  if (isTaskLoading || isStatusesLoading) return <Loader />;
+  if (isTaskError || isStatusesError) return <p>Error loading task details</p>;
+
   const renderComments = (comments) => {
     const reversedComments = [...comments].reverse();
-
     return reversedComments.map((comment) => (
-      <div key={comment.id} className="space-y-2 mb-6  rounded-lg ">
+      <div key={comment.id} className="space-y-2 mb-6 rounded-lg ">
         <div className="flex items-start space-x-4">
           <img
             src={comment.author_avatar}
@@ -105,11 +153,9 @@ const TaskDetailsPage = () => {
             <p className="mb-2 text-[#212529] font-medium text-[18px] leading-[100%] tracking-[0%]">
               {comment.author_nickname || "Employee"}
             </p>
-
             <p className="text-[#343A40] font-[350] text-[16px] leading-[100%] tracking-[0%]">
               {comment.text}
             </p>
-
             {!comment.parent_id && (
               <button
                 onClick={() => handleReply(comment.id)}
@@ -123,7 +169,6 @@ const TaskDetailsPage = () => {
                 უპასუხე
               </button>
             )}
-
             {replyingTo === comment.id && (
               <div className="relative mt-2 mb-5">
                 <textarea
@@ -132,24 +177,23 @@ const TaskDetailsPage = () => {
                     setReplyText({ ...replyText, [comment.id]: e.target.value })
                   }
                   placeholder="უპასუხე..."
-                  className="w-full  h-32 relative p-4 border bg-white border-gray-300 rounded-lg"
+                  className="w-full h-32 relative p-4 border bg-white border-gray-300 rounded-lg"
                 ></textarea>
                 <button
                   onClick={() => handleReplySubmit(comment.id)}
                   disabled={!replyText[comment.id]?.trim()}
-                  className="w-fit h-fit px-5 absolute bottom-4 right-5 rounded-[20px] bg-[#8338EC] text-white p-2  hover:bg-[#B588F4]"
+                  className="w-fit h-fit px-5 absolute bottom-4 right-5 rounded-[20px] bg-[#8338EC] text-white p-2 hover:bg-[#B588F4]"
                 >
                   პასუხის დამატება
                 </button>
               </div>
             )}
-
             {comment.sub_comments && comment.sub_comments.length > 0 && (
               <div className="">
                 {comment.sub_comments.map((subComment) => (
                   <div
                     key={subComment.id}
-                    className="space-y-2 mb-5 rounded-lg  bg-opacity "
+                    className="space-y-2 mb-5 rounded-lg bg-opacity "
                   >
                     <div className="flex items-start space-x-4">
                       <img
@@ -161,7 +205,6 @@ const TaskDetailsPage = () => {
                         <p className="mb-2 text-[#212529] font-medium text-[18px] leading-[100%] tracking-[0%]">
                           {subComment.author_nickname || "Employee"}
                         </p>
-
                         <div className="flex-1">
                           <p className="text-[#343A40] font-[350] text-[16px] leading-[100%] tracking-[0%]">
                             {subComment.text}
@@ -179,17 +222,12 @@ const TaskDetailsPage = () => {
     ));
   };
 
-  if (taskLoading) return <Loader />;
-  if (taskError)
-    return <p className="text-red-500">Error fetching task details</p>;
-
   const borderColor =
     task.priority.id === 1
       ? "#08A508"
       : task.priority.id === 2
       ? "#FFBE0B"
       : "#FA4D4D";
-
   const depColor =
     task.department.id === 1
       ? "#6A77FD"
@@ -206,50 +244,49 @@ const TaskDetailsPage = () => {
       : task.department.id === 7
       ? "#A27AFF"
       : "#CCCCCC";
-
   const totalComments = countTotalComments(comments);
 
   return (
     <div className="flex flex-col lg:flex-row space-y-8 lg:space-x-8 p-8">
       <div className="min-w-1/2 flex-1 space-y-6 mb-30">
         <div className="flex justify-between items-center mb-7">
-          <div className="w-[184px] flex items-center gap-2">
+          <div className="w-52 flex items-center gap-2">
             <div
               style={{ border: `1px solid ${borderColor}` }}
-              className="w-[86px] h-[26px] rounded-[4px] border-[0.5px] p-1 gap-[6px] flex items-center"
+              className="w-[106px] h-[26px] rounded-[4px] border-[0.5px] p-1 gap-[6px] flex items-center"
             >
               <img
                 src={task.priority.icon}
                 alt={task.priority}
-                className="w-3 h-[9px]"
+                className="w-[18px] h-5"
               />
               <p
                 style={{ color: `${borderColor}` }}
-                className="text-[12px] leading-[150%]"
+                className="text-4 leading-[150%]"
               >
                 {task.priority.name}
               </p>
             </div>
             <div
               style={{ backgroundColor: `${depColor}` }}
-              className="w-[88px] h-[24px] rounded-[15px] gap-[10px] pt-[5px] pr-[9px] pb-[5px] pl-[9px]"
+              className="w-[88px] h-[29px] rounded-[15px] gap-[10px] pt-[5px] pr-[9px] pb-[5px] pl-[9px]"
             >
-              <p className="text-white font-normal text-[12px] leading-[100%] tracking-[0%] truncate">
+              <p className="text-white font-normal text-4 leading-[100%] tracking-[0%] truncate">
                 {task.department.name}
               </p>
             </div>
           </div>
         </div>
 
-        <h2 className="font-semibold text-[34px] leading-[100%] tracking-normal text-[#212529]">
+        <h2 className="font-semibold text-[34px] leading-[100%] tracking-normal text-[#212529] mb-9">
           {task.name}
         </h2>
-        <p className="text-gray-600">{task.description}</p>
+        <p className="text-gray-600 mb-18">{task.description}</p>
         <h3 className="text-xl font-semibold text-gray-800">
           დავალების დეტალები
         </h3>
         {/* Status Dropdown */}
-        <div className="flex max-w-md">
+        <div className="flex max-w-lg">
           <div className="flex w-1/2">
             <img
               src="/assets/images/pie-chart-icon.png"
@@ -258,10 +295,24 @@ const TaskDetailsPage = () => {
             />
             <p className="text-gray-600">სტატუსი: </p>
           </div>
-          <p className="text-gray-600">{task.status?.name || "N/A"}</p>
+          <select
+            className="w-[259px] h-[45px] gap-[10px] rounded-[5px] border border-[#CED4DA] p-[14px] text-[14px] font-light leading-none text-[#0d0f1093]"
+            value={task.status?.id || ""}
+            onChange={handleStatusChange}
+          >
+            {statuses.map((status) => (
+              <option
+                key={status.id}
+                value={status.id}
+                // className="text-[14px] font-light leading-none text-[#0D0F10]"
+              >
+                {status.name}
+              </option>
+            ))}
+          </select>
         </div>
 
-        <div className="flex max-w-md">
+        <div className="flex max-w-lg">
           <div className="flex w-1/2">
             <img
               src="/assets/images/user-icon.png"
@@ -278,19 +329,19 @@ const TaskDetailsPage = () => {
                 className="w-8 h-8 rounded-full mr-2"
               />
             )}
-            <div>
-              <p className="text-gray-600 text-[11px] font-light leading-none tracking-normal">
+            <div className="w-fit">
+              <p className="font-light text-xs leading-none tracking-normal text-[#474747]">
                 {task.department.name || "N/A"}
               </p>
 
-              <p className="text-gray-600 font-normal text-sm leading-[150%] tracking-normal">
+              <p className="text-[#0D0F10] font-normal text-[14px] leading-[150%] tracking-normal">
                 {task.employee?.name || "N/A"} {task.employee?.surname || "N/A"}
               </p>
             </div>
           </div>
         </div>
 
-        <div className="flex max-w-md">
+        <div className="flex max-w-lg">
           <div className="flex w-1/2">
             <img
               src="/assets/images/calendar-icon.png"

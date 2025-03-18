@@ -1,8 +1,9 @@
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form"; // Import Controller
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { publicAxios } from "../config/axios";
 import Loader from "../components/Loader";
 import BtnCreateNew from "../components/button/BtnCreateNew";
+import ReactSelect from "react-select";
 
 const fetchStatuses = async () => {
   const { data } = await publicAxios.get("/statuses");
@@ -30,19 +31,36 @@ const NewTask = () => {
     handleSubmit,
     formState: { errors },
     reset,
+    control, // Add control for using Controller with ReactSelect
   } = useForm();
 
   const mutation = useMutation({
     mutationFn: (newTask) => publicAxios.post("/tasks", newTask),
     onSuccess: () => {
-      reset();
+      reset({
+        title: "",
+        description: "",
+        priority: null, // Reset the priority to null
+        status: "",
+        department: "",
+        responsiblePerson: "",
+        deadline: "",
+      });
+      setValue("priority", null); // Explicitly reset the priority field using setValue
       alert("დავალება წარმატებით შეიქმნა!");
     },
     onError: (error) => {
-      console.error("Error creating task:", error);
-      alert("Failed to create task. Please try again.");
+      if (error.response) {
+        console.error("Error creating task:", error.response.data);
+        alert(`Failed to create task: ${error.response.data.message}`);
+      } else {
+        console.error("Error creating task:", error.message);
+        alert("Failed to create task. Please try again.");
+      }
     },
   });
+
+  const { setValue } = useForm();
 
   const { data: statuses, isLoading: loadingStatuses } = useQuery({
     queryKey: ["statuses"],
@@ -71,6 +89,13 @@ const NewTask = () => {
       due_date: data.deadline,
       status_id: parseInt(data.status, 10),
       employee_id: parseInt(data.responsiblePerson, 10),
+      priority_id: parseInt(data.priority, 10), // Send the priority value
+      department_id: parseInt(data.department, 10),
+    });
+
+    console.log("Parsed Values:", {
+      status_id: parseInt(data.status, 10),
+      employee_id: parseInt(data.responsiblePerson, 10),
       priority_id: parseInt(data.priority, 10),
       department_id: parseInt(data.department, 10),
     });
@@ -84,6 +109,17 @@ const NewTask = () => {
   ) {
     return <Loader />;
   }
+
+  // Prepare options for ReactSelect dropdown
+  const options = priorities.map((priority) => ({
+    value: priority.id,
+    label: (
+      <div className="flex items-center">
+        <img src={priority.icon} alt={priority.name} className="mr-2" />
+        {priority.name}
+      </div>
+    ),
+  }));
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -122,25 +158,33 @@ const NewTask = () => {
               <div className="grid grid-cols-2 gap-6">
                 <div>
                   <label className="block font-medium">პრიორიტეტი</label>
-                  <select
-                    {...register("priority", {
-                      required: "აირჩიეთ პრიორიტეტი",
-                    })}
-                    className="w-full p-2 border border-gray-300 rounded"
-                  >
-                    <option value="">აირჩიეთ</option>
-                    {priorities.map((priority) => (
-                      <option key={priority.id} value={priority.id}>
-                        {priority.name}
-                      </option>
-                    ))}
-                  </select>
+                  <Controller
+                    name="priority"
+                    control={control}
+                    rules={{ required: "აირჩიეთ პრიორიტეტი" }}
+                    render={({ field }) => (
+                      <ReactSelect
+                        {...field}
+                        options={options}
+                        value={
+                          options.find(
+                            (option) => option.value === field.value
+                          ) || null
+                        } // Ensure value is reset to null
+                        onChange={(selectedOption) => {
+                          field.onChange(selectedOption?.value); // Update form state with selected priority id
+                        }}
+                        className="w-full"
+                      />
+                    )}
+                  />
                   {errors.priority && (
                     <p className="text-red-500 text-sm">
                       {errors.priority.message}
                     </p>
                   )}
                 </div>
+
                 <div>
                   <label className="block font-medium">სტატუსი</label>
                   <select
