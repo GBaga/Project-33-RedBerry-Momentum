@@ -97,25 +97,3 @@ For any questions or feedback, please reach out to:
 ## API Reference
 
 #### Get all items
-
-```http
-  GET /api/items
-| Parameter | Type | Description | | :-------- | :------- | :------------------------- | | api_key | string | Required. Your API key |
-
-Get item
-  GET /api/items/${id}
-| Parameter | Type | Description | | :-------- | :------- | :-------------------------------- | | id | string | Required. Id of item to fetch |
-
-add(num1, num2)
-Takes two numbers and returns the sum.
-
-React + Vite Setup
-This template provides a minimal setup to get React working in Vite with Hot Module Replacement (HMR) and some ESLint rules.
-
-Currently, two official plugins are available:
-
-@vitejs/plugin-react uses Babel for Fast Refresh
-@vitejs/plugin-react-swc uses SWC for Fast Refresh
-Expanding the ESLint configuration
-If you are developing a production application, we recommend using TypeScript and enabling type-aware lint rules. Check out the TS template to integrate TypeScript and typescript-eslint in your project.
-```
