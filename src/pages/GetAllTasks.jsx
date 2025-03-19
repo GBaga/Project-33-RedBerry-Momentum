@@ -112,12 +112,7 @@ const GetAllTasks = () => {
   };
 
   const handleEmployeeChange = (e) => {
-    const value = e.target.value;
-    setSelectedEmployees((prev) =>
-      prev.includes(value)
-        ? prev.filter((id) => id !== value)
-        : [...prev, value]
-    );
+    setSelectedEmployees([e.target.value]);
   };
 
   const clearAllFilters = () => {
@@ -145,6 +140,9 @@ const GetAllTasks = () => {
     { id: 3, color: "#FF006E", label: "მზად დასატესტად" },
     { id: 4, color: "#3A86FF", label: "დასრულებული" },
   ];
+
+  const truncate = (str, length) =>
+    str?.length > length ? str.substring(0, length) + "..." : str;
 
   return (
     <>
@@ -187,7 +185,6 @@ const GetAllTasks = () => {
               </div>
             )}
           </div>
-
           {/* Priority Filter Dropdown */}
           <div className="relative" ref={priorityRef}>
             <button
@@ -221,14 +218,22 @@ const GetAllTasks = () => {
             )}
           </div>
 
-          {/* Employee Filter Dropdown */}
           <div className="relative" ref={employeeRef}>
             <button
               onClick={() => setIsEmployeeOpen(!isEmployeeOpen)}
               className="max-w-50 w-full flex items-center py-3 px-5 rounded cursor-pointer"
             >
               {selectedEmployees.length > 0
-                ? `${selectedEmployees.length} მონიშნული`
+                ? `${truncate(
+                    employees.find(
+                      (emp) => emp.id === Number(selectedEmployees[0])
+                    )?.name +
+                      " " +
+                      employees.find(
+                        (emp) => emp.id === Number(selectedEmployees[0])
+                      )?.surname,
+                    12
+                  )}`
                 : "თანამშრომელი"}
               <img
                 src="/assets/images/arrow-down-icon.png"
@@ -237,11 +242,12 @@ const GetAllTasks = () => {
               />
             </button>
             {isEmployeeOpen && (
-              <div className="absolute bg-white w-[300px]  border p-2 rounded  mt-1 max-h-60 overflow-auto z-10">
+              <div className="absolute bg-white w-[300px] border p-2 rounded mt-1 max-h-60 overflow-auto z-10">
                 {employees?.map((emp) => (
                   <label key={emp.id} className="block">
                     <input
-                      type="checkbox"
+                      type="radio"
+                      name="employee"
                       value={emp.id}
                       checked={selectedEmployees.includes(String(emp.id))}
                       onChange={handleEmployeeChange}
