@@ -201,11 +201,11 @@ const NewTask = () => {
   }));
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="max-w-[1920px] w-full min-h-[calc(100vh-300px-224px)] mx-auto px-4 sm:px-6 lg:px-8">
       <h2 className="mb-6 font-semibold text-2xl sm:text-3xl lg:text-4xl leading-tight">
         შექმენი ახალი დავალება
       </h2>
-      <div className="m-w-[1684px] w-full min-h-full rounded-[4px]  border-[#ddd2ff70] border-[0.3px] bg-[#FBF9FFA6] py-[65px] px-[55px]">
+      <div className="max-w-[1920px] w-full min-h-[calc(100vh-300px-224px)]   rounded-[4px]  border-[#ddd2ff70] border-[0.3px] bg-[#FBF9FFA6] py-[65px] px-[55px] ">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {/* Left Column */}
@@ -232,7 +232,6 @@ const NewTask = () => {
                   <p className="text-red-500 text-sm">{errors.title.message}</p>
                 )}
               </div>
-
               <div>
                 <label className="block text-[#343A40] font-normal text-4 leading-[100%] tracking-[0%] mb-1.5">
                   აღწერა *
