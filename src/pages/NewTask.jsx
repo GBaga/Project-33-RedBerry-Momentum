@@ -202,31 +202,46 @@ const NewTask = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h2 className="font-semibold text-2xl sm:text-3xl lg:text-4xl leading-tight">
+      <h2 className="mb-6 font-semibold text-2xl sm:text-3xl lg:text-4xl leading-tight">
         შექმენი ახალი დავალება
       </h2>
-      <div className="bg-white p-6 rounded-lg shadow-md mt-6">
+      <div className="m-w-[1684px] w-full min-h-full rounded-[4px]  border-[#ddd2ff70] border-[0.3px] bg-[#FBF9FFA6] py-[65px] px-[55px]">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {/* Left Column */}
             <div className="space-y-4">
               <div>
-                <label className="block font-medium">სათაური</label>
+                <label className="block text-[#343A40] font-normal text-[16px] leading-[100%] tracking-[0%] mb-1.5">
+                  სათაური *
+                </label>
                 <input
-                  {...register("title", { required: "სათაური აუცილებელია" })}
-                  className="w-full p-2 border border-gray-300 rounded"
+                  {...register("title", {
+                    required: "სათაური აუცილებელია",
+                    minLength: {
+                      value: 3,
+                      message: "მინიმუმ 3 სიმბოლო",
+                    },
+                    maxLength: {
+                      value: 255,
+                      message: "მაქსიმუმ 255 სიმბოლო",
+                    },
+                  })}
+                  className="max-w-[550px] w-full min-h-[45px] rounded-[5px] border focus:border-[2px] border-[#DEE2E6] bg-[#FFFFFF] px-3 py-1.5 gap-[10px] focus:border-blue-400 focus:outline-none"
                 />
                 {errors.title && (
                   <p className="text-red-500 text-sm">{errors.title.message}</p>
                 )}
               </div>
+
               <div>
-                <label className="block font-medium">აღწერა</label>
+                <label className="block text-[#343A40] font-normal text-4 leading-[100%] tracking-[0%] mb-1.5">
+                  აღწერა *
+                </label>
                 <textarea
                   {...register("description", {
                     required: "აღწერა აუცილებელია",
                   })}
-                  className="w-full p-2 border border-gray-300 rounded"
+                  className=" max-w-[550px] w-full min-h-[133px] rounded-[5px] border focus:border-[2px] border-[#DEE2E6] bg-[#FFFFFF] p-[14px] gap-[10px]  focus:border-blue-400 focus:outline-none"
                 />
                 {errors.description && (
                   <p className="text-red-500 text-sm">
@@ -236,7 +251,9 @@ const NewTask = () => {
               </div>
               <div className="grid grid-cols-2 gap-6">
                 <div>
-                  <label className="block font-medium">პრიორიტეტი</label>
+                  <label className="block text-[#343A40] font-normal text-[16px] leading-[100%] tracking-[0%] mb-1.5">
+                    პრიორიტეტი *
+                  </label>
                   <Controller
                     name="priority"
                     control={control}
@@ -247,9 +264,10 @@ const NewTask = () => {
                         options={optionsPriorities}
                         value={
                           optionsPriorities.find(
-                            (option) => option.value === field.value
-                          ) || null
-                        } // Ensure value is reset to null
+                            (option) =>
+                              option.value === field.value || option.value === 2
+                          ) || null // Default to value 2 (შუალო) if no other value is set
+                        }
                         onChange={(selectedOption) => {
                           field.onChange(selectedOption?.value); // Update form state with selected priority id
                         }}
@@ -258,6 +276,7 @@ const NewTask = () => {
                       />
                     )}
                   />
+
                   {errors.priority && (
                     <p className="text-red-500 text-sm">
                       {errors.priority.message}
@@ -266,7 +285,9 @@ const NewTask = () => {
                 </div>
 
                 <div>
-                  <label className="block font-medium">სტატუსი</label>
+                  <label className="block text-[#343A40] font-normal text-[16px] leading-[100%] tracking-[0%] mb-1.5">
+                    სტატუსი *
+                  </label>
                   <Controller
                     name="status"
                     control={control}
@@ -277,11 +298,12 @@ const NewTask = () => {
                         options={optionsStatuses}
                         value={
                           optionsStatuses.find(
-                            (option) => option.value === field.value
+                            (option) =>
+                              option.value === field.value || option.value === 1
                           ) || null
-                        } // Ensure value is reset to null
+                        }
                         onChange={(selectedOption) => {
-                          field.onChange(selectedOption?.value);
+                          field.onChange(selectedOption?.value); // Update form state with selected status id
                         }}
                         placeholder="აირჩიეთ სტატუსი"
                         className="w-full"
@@ -300,7 +322,9 @@ const NewTask = () => {
             {/* Right Column */}
             <div className="space-y-4">
               <div>
-                <label className="block font-medium">დეპარტამენტი</label>
+                <label className="block text-[#343A40] font-normal text-[16px] leading-[100%] tracking-[0%] mb-1.5">
+                  დეპარტამენტი *
+                </label>
                 <Controller
                   name="department"
                   control={control}
@@ -331,7 +355,9 @@ const NewTask = () => {
                 )}
               </div>
               <div>
-                <label className="block font-medium">პასუხისმგებელი პირი</label>
+                <label className="block text-[#343A40] font-normal text-[16px] leading-[100%] tracking-[0%] mb-1.5">
+                  პასუხისმგებელი პირი
+                </label>
                 <Controller
                   name="responsiblePerson"
                   control={control}
@@ -360,11 +386,13 @@ const NewTask = () => {
                 )}
               </div>
               <div>
-                <label className="block font-medium">დედლაინი</label>
+                <label className="block text-[#343A40] font-normal text-[16px] leading-[100%] tracking-[0%] mb-1.5">
+                  დედლაინი
+                </label>
                 <input
                   type="date"
                   {...register("deadline", { required: "აირჩიეთ დედლაინი" })}
-                  className="w-1/2 p-2 border border-gray-300 rounded"
+                  className="w-1/2 p-2 border border-gray-300 rounded focus:border-[2px] focus:border-blue-400 focus:outline-none"
                 />
                 {errors.deadline && (
                   <p className="text-red-500 text-sm">
