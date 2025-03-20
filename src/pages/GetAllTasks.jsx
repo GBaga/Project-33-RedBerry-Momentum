@@ -171,7 +171,10 @@ const GetAllTasks = () => {
             {isDepartmentOpen && (
               <div className="absolute bg-white w-[400px] border p-2 rounded  mt-1 min-h-fit overflow-auto z-10 ">
                 {departments?.map((dep) => (
-                  <label key={dep.id} className="block cursor-pointer">
+                  <label
+                    key={dep.id}
+                    className="block cursor-pointer hover:bg-gray-100"
+                  >
                     <input
                       type="checkbox"
                       value={dep.id}
@@ -189,7 +192,7 @@ const GetAllTasks = () => {
           <div className="relative" ref={priorityRef}>
             <button
               onClick={() => setIsPriorityOpen(!isPriorityOpen)}
-              className="max-w-50 w-full flex items-center py-3 px-5 rounded cursor-pointer"
+              className="max-w-50 w-full flex items-center py-3 px-5 rounded cursor-pointer active:text-[#8338EC]"
             >
               {selectedPriorities.length > 0
                 ? `${selectedPriorities.length} მონიშნული`
@@ -201,9 +204,12 @@ const GetAllTasks = () => {
               />
             </button>
             {isPriorityOpen && (
-              <div className="absolute bg-white  border p-2 rounded w-full mt-1 max-h-60 overflow-auto z-10">
+              <div className="absolute bg-white  border p-2 rounded w-full mt-1 max-h-60 overflow-auto z-10 cursor-pointer">
                 {priorities?.map((priority) => (
-                  <label key={priority.id} className="block">
+                  <label
+                    key={priority.id}
+                    className="block cursor-pointer hover:bg-gray-100"
+                  >
                     <input
                       type="checkbox"
                       value={priority.id}
@@ -221,7 +227,7 @@ const GetAllTasks = () => {
           <div className="relative" ref={employeeRef}>
             <button
               onClick={() => setIsEmployeeOpen(!isEmployeeOpen)}
-              className="max-w-50 w-full flex items-center py-3 px-5 rounded cursor-pointer"
+              className="max-w-50 w-full flex items-center py-3 px-5 rounded cursor-pointer active:text-[#8338EC]"
             >
               {selectedEmployees.length > 0
                 ? `${truncate(
@@ -242,9 +248,12 @@ const GetAllTasks = () => {
               />
             </button>
             {isEmployeeOpen && (
-              <div className="absolute bg-white w-[300px] border p-2 rounded mt-1 max-h-60 overflow-auto z-10">
+              <div className="absolute bg-white w-[300px] border p-2 rounded mt-1 max-h-60 overflow-auto z-10 cursor-pointer">
                 {employees?.map((emp) => (
-                  <label key={emp.id} className="block">
+                  <label
+                    key={emp.id}
+                    className="block cursor-pointer hover:bg-gray-100"
+                  >
                     <input
                       type="radio"
                       name="employee"

@@ -6,6 +6,7 @@ import BtnCreateNew from "../components/button/BtnCreateNew";
 import ReactSelect from "react-select";
 import { useState } from "react";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const fetchStatuses = async () => {
   const { data } = await publicAxios.get("/statuses");
@@ -34,7 +35,15 @@ const NewTask = () => {
     formState: { errors },
     reset,
     control,
-  } = useForm();
+    setValue,
+  } = useForm({
+    defaultValues: {
+      priority: 2,
+      status: 1, // Default priority value (შუალო)
+    },
+  });
+
+  const navigate = useNavigate();
 
   const mutation = useMutation({
     mutationFn: (newTask) => publicAxios.post("/tasks", newTask),
@@ -54,13 +63,15 @@ const NewTask = () => {
         icon: "success",
         title: "მონაცემები წარმატებით შეინახა!",
         showConfirmButton: false,
-        timer: 3000,
+        timer: 2000,
         background: "#F8F3FE",
         color: "#212529",
         customClass: {
           popup: "rounded-lg shadow-lg p-6",
           title: "text-[#212529] font-semibold text-lg",
         },
+      }).then(() => {
+        navigate("/");
       });
     },
     onError: (error) => {
@@ -71,7 +82,7 @@ const NewTask = () => {
           icon: "error",
           title: `მონაცემები ვერ შეინახა: ${error.response.data.message}`,
           showConfirmButton: false,
-          timer: 3000,
+          timer: 2000,
           background: "#F8F3FE",
           color: "#212529",
           customClass: {
@@ -86,7 +97,7 @@ const NewTask = () => {
           icon: "error",
           title: "მონაცემები ვერ შეინახა. ხელახლა სცადეთ.",
           showConfirmButton: false,
-          timer: 3000,
+          timer: 2000,
           background: "#F8F3FE",
           color: "#212529",
           customClass: {
@@ -97,8 +108,6 @@ const NewTask = () => {
       }
     },
   });
-
-  const { setValue } = useForm();
 
   const { data: statuses, isLoading: loadingStatuses } = useQuery({
     queryKey: ["statuses"],
@@ -263,12 +272,15 @@ const NewTask = () => {
                         options={optionsPriorities}
                         value={
                           optionsPriorities.find(
-                            (option) =>
-                              option.value === field.value || option.value === 2
-                          ) || null // Default to value 2 (შუალო) if no other value is set
-                        }
+                            (option) => option.value === field.value
+                          ) ||
+                          optionsPriorities.find(
+                            (option) => option.value === 2
+                          ) ||
+                          null
+                        } // Ensures "შუალო" is selected if no other value exists
                         onChange={(selectedOption) => {
-                          field.onChange(selectedOption?.value); // Update form state with selected priority id
+                          field.onChange(selectedOption?.value); // Updates form state
                         }}
                         placeholder="აირჩიეთ პრიორიტეტი"
                         className="w-full"

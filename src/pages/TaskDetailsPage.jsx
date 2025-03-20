@@ -134,7 +134,7 @@ const TaskDetailsPage = () => {
         icon: "success",
         title: "სტატუსი წარმატებით შეიცვალა!",
         showConfirmButton: false,
-        timer: 3000,
+        timer: 2000,
         background: "#F8F3FE",
         color: "#212529",
         customClass: {
@@ -173,7 +173,7 @@ const TaskDetailsPage = () => {
             {!comment.parent_id && (
               <button
                 onClick={() => handleReply(comment.id)}
-                className=" text-[#8338EC] font-normal text-[12px] leading-[100%] tracking-[0%] flex items-center mt-4 mb-6"
+                className=" text-[#8338EC] font-normal text-[12px] leading-[100%] tracking-[0%] flex items-center mt-4 mb-6 cursor-pointer"
               >
                 <img
                   src="/assets/images/arrow-left-icon.png"
@@ -196,7 +196,7 @@ const TaskDetailsPage = () => {
                 <button
                   onClick={() => handleReplySubmit(comment.id)}
                   disabled={!replyText[comment.id]?.trim()}
-                  className="w-fit h-fit px-5 absolute bottom-4 right-5 rounded-[20px] bg-[#8338EC] text-white p-2 hover:bg-[#B588F4]"
+                  className="w-fit h-fit px-5 absolute bottom-4 right-5 rounded-[20px] bg-[#8338EC] text-white p-2 hover:bg-[#B588F4] cursor-pointer"
                 >
                   პასუხის დამატება
                 </button>
@@ -310,7 +310,7 @@ const TaskDetailsPage = () => {
             <p className="text-gray-600">სტატუსი: </p>
           </div>
           <select
-            className="w-[259px] h-[45px] gap-[10px] rounded-[5px] border border-[#CED4DA] p-[14px] text-[14px] font-light leading-none text-[#0d0f1093]"
+            className="w-[259px] h-[45px] gap-[10px] rounded-[5px] border border-[#CED4DA] p-[14px] text-[14px] font-light leading-none text-[#0d0f1093] cursor-pointer"
             value={task.status?.id || ""}
             onChange={handleStatusChange}
           >
@@ -383,7 +383,7 @@ const TaskDetailsPage = () => {
               commentMutation.mutate({ taskId, text: commentText })
             }
             disabled={!commentText.trim()}
-            className="w-38 h-fit px-5 absolute bottom-4 right-5 rounded-[20px] bg-[#8338EC] text-white p-2  hover:bg-[#B588F4]"
+            className="w-38 h-fit px-5 absolute bottom-4 right-5 rounded-[20px] bg-[#8338EC] text-white p-2  hover:bg-[#B588F4] cursor-pointer"
           >
             დააკომენტარე
           </button>
