@@ -10,7 +10,6 @@ function Navbar() {
   return (
     <nav className="border-gray-700 sm:px-[40px] md:px-[70px] lg:px-[100px] xl:px-[120px]">
       <div className="max-w-[1920px] flex flex-wrap items-center justify-between mx-auto px-4  h-32">
-        {/* Logo */}
         <Link to="/" className="flex items-center space-x-3 w-[210px] h-[38px]">
           <span className="self-center text-2xl font-semibold whitespace-nowrap">
             Momentum
@@ -92,14 +91,6 @@ function Navbar() {
           </Link>
 
           <div className="flex flex-col space-y-4 sm:justify-center">
-            {/* <Link
-              to="/history"
-              onClick={() => setMenuOpen(false)}
-              className="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900"
-            >
-              თანამშრომლის შექმნა
-            </Link> */}
-
             <ModalForm />
             <Link
               to="/new-task"

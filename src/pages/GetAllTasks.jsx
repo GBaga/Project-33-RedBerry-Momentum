@@ -192,7 +192,7 @@ const GetAllTasks = () => {
           <div className="relative" ref={priorityRef}>
             <button
               onClick={() => setIsPriorityOpen(!isPriorityOpen)}
-              className="max-w-50 w-full flex items-center py-3 px-5 rounded cursor-pointer active:text-[#8338EC]"
+              className="max-w-50 w-full flex items-center py-3 px-5 rounded cursor-pointer"
             >
               {selectedPriorities.length > 0
                 ? `${selectedPriorities.length} მონიშნული`
@@ -227,7 +227,7 @@ const GetAllTasks = () => {
           <div className="relative" ref={employeeRef}>
             <button
               onClick={() => setIsEmployeeOpen(!isEmployeeOpen)}
-              className="max-w-50 w-full flex items-center py-3 px-5 rounded cursor-pointer active:text-[#8338EC]"
+              className="max-w-50 w-full flex items-center py-3 px-5 rounded cursor-pointer"
             >
               {selectedEmployees.length > 0
                 ? `${truncate(

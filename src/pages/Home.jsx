@@ -1,11 +1,5 @@
-import GetAllDepartments from "../components/GetAllDepartments";
-import GetAllPriorities from "../components/GetAllPriorities";
-import GetAllTasks from "../pages/GetAllTasks";
-import GetEmployeeList from "../components/GetEmployeeList";
-import GetStatusList from "../components/GetStatusList";
-import ModalWindow from "../components/ModalWindow";
-import TaskCard from "../components/TaskCard";
-import TaskDetailsPage from "./TaskDetailsPage";
+import React from "react";
+import GetAllTasks from "./GetAllTasks";
 
 function Home() {
   return (

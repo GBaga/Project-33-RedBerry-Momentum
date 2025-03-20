@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { publicAxios } from "../config/axios";
 import "./modalForm.css";
 import Loader from "./Loader";
-import BtnCreateNew from "./button/BtnCreateNew";
+import Swal from "sweetalert2";
 
 const fetchDepartments = async () => {
   const { data } = await publicAxios.get("/departments");
@@ -49,7 +49,20 @@ const ModalForm = () => {
           },
         }
       );
-      alert("დაემატა ახალი თანამშრომელი:", response.data);
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "მონაცემები წარმატებით შეინახა!",
+        showConfirmButton: false,
+        timer: 2000,
+        background: "#F8F3FE",
+        color: "#212529",
+        customClass: {
+          popup: "rounded-lg shadow-lg p-6",
+          title: "text-[#212529] font-semibold text-lg",
+        },
+      });
+
       form.resetFields();
       setOpen(false);
     } catch (error) {
@@ -57,6 +70,19 @@ const ModalForm = () => {
         "Error creating employee:",
         error.response?.data || error.message
       );
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: "თანამშრომელი ვერ დაემატა. ხელახლა სცადეთ.",
+        showConfirmButton: false,
+        timer: 2000,
+        background: "#F8F3FE",
+        color: "#212529",
+        customClass: {
+          popup: "rounded-lg shadow-lg p-6",
+          title: "text-[#212529] font-semibold text-lg",
+        },
+      });
     }
   };
 

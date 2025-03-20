@@ -3,7 +3,6 @@ import { Link } from "react-router";
 function SocialNetworks() {
   return (
     <div className="flex gap-4 justify-center md:justify-start">
-      {/* Linkedin */}
       <div>
         <Link
           to="https://www.linkedin.com/in/goga-bagauri/"
@@ -18,7 +17,6 @@ function SocialNetworks() {
         </Link>
       </div>
 
-      {/* Github */}
       <div>
         <Link
           to="https://github.com/GBaga"
@@ -33,7 +31,6 @@ function SocialNetworks() {
         </Link>
       </div>
 
-      {/* X (formerly Twitter) */}
       <div>
         <Link
           to="https://x.com/GBagauri"
