@@ -547,6 +547,7 @@ const NewTask = () => {
   });
 
   const [selectedDepartment, setSelectedDepartment] = useState(null);
+  const [isDescriptionFocused, setIsDescriptionFocused] = useState(false);
 
   const filteredEmployees = selectedDepartment
     ? employees.filter(
@@ -688,18 +689,43 @@ const NewTask = () => {
               </div>
               <div>
                 <label className="block text-[#343A40] font-normal text-4 leading-[100%] tracking-[0%] mb-1.5">
-                  აღწერა *
+                  აღწერა
                 </label>
                 <textarea
                   {...register("description", {
-                    required: "აღწერა აუცილებელია",
+                    validate: {
+                      minWords: (value) =>
+                        value.split(" ").filter(Boolean).length >= 4 ||
+                        "მინიმუმ 4 სიტყვა",
+                      maxLength: (value) =>
+                        value.length <= 255 || "მაქსიმუმ 255 სიმბოლო",
+                    },
                   })}
-                  className=" max-w-[550px] w-full min-h-[133px] rounded-[5px] border focus:border-[2px] border-[#DEE2E6] bg-[#FFFFFF] p-[14px] gap-[10px] focus:border-blue-400 focus:outline-none"
+                  onFocus={() => setIsDescriptionFocused(true)}
+                  className="max-w-[550px] w-full min-h-[133px] rounded-[5px] border focus:border-[2px] border-[#DEE2E6] bg-[#FFFFFF] p-[14px] gap-[10px] focus:border-blue-400 focus:outline-none"
                 />
-                {errors.description && (
-                  <p className="text-red-500 text-sm">
-                    {errors.description.message}
-                  </p>
+                {isDescriptionFocused && watch("description") && (
+                  <>
+                    <p
+                      className={`text-sm ${
+                        watch("description").split(" ").filter(Boolean).length <
+                        4
+                          ? "text-red-500"
+                          : "text-green-500"
+                      }`}
+                    >
+                      მინიმუმ 4 სიტყვა
+                    </p>
+                    <p
+                      className={`text-sm ${
+                        watch("description").length > 255
+                          ? "text-red-500"
+                          : "text-green-500"
+                      }`}
+                    >
+                      მაქსიმუმ 255 სიმბოლო
+                    </p>
+                  </>
                 )}
               </div>
               <div className="grid grid-cols-2 gap-6">
