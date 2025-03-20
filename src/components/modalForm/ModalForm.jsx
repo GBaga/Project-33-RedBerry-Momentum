@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { Modal, Button, Form, Input, Select, Upload } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
-import { publicAxios } from "../config/axios";
+import { publicAxios } from "../../config/axios";
 import "./modalForm.css";
-import Loader from "./Loader";
+import Loader from "../Loader";
 import Swal from "sweetalert2";
 
 const fetchDepartments = async () => {

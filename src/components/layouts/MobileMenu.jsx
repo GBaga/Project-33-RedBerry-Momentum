@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import BtnCreateNew from "../button/BtnCreateNew";
-import ModalForm from "../ModalForm";
+import ModalForm from "../modalForm/ModalForm";
 
 const MobileMenu = ({ menuOpen, setMenuOpen }) => {
   useEffect(() => {

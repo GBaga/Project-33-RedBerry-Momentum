@@ -1,3 +1,4 @@
+import "./filters.css";
 import { useState, useEffect, useRef } from "react";
 
 const Filters = ({
@@ -76,7 +77,9 @@ const Filters = ({
       <div className="relative" ref={departmentRef}>
         <button
           onClick={() => setIsDepartmentOpen(!isDepartmentOpen)}
-          className="max-w-50 w-full flex items-center py-3 px-5 rounded cursor-pointer active:text-[#8338EC]"
+          className={`max-w-50 w-full flex items-center py-3 px-5 rounded cursor-pointer ${
+            isDepartmentOpen ? "text-[#8338EC]" : ""
+          }`}
         >
           {selectedDepartments.length > 0
             ? `${selectedDepartments.length} მონიშნული`
@@ -84,7 +87,7 @@ const Filters = ({
           <img
             src="/assets/images/arrow-down-icon.png"
             alt="arrow-down-icon"
-            className="h-2 ml-3"
+            className={`h-2 ml-3 ${isDepartmentOpen ? "filter-active" : ""}`}
           />
         </button>
         {isDepartmentOpen && (
@@ -111,7 +114,9 @@ const Filters = ({
       <div className="relative" ref={priorityRef}>
         <button
           onClick={() => setIsPriorityOpen(!isPriorityOpen)}
-          className="max-w-50 w-full flex items-center py-3 px-5 rounded cursor-pointer"
+          className={`max-w-50 w-full flex items-center py-3 px-5 rounded cursor-pointer ${
+            isPriorityOpen ? "text-[#8338EC]" : ""
+          }`}
         >
           {selectedPriorities.length > 0
             ? `${selectedPriorities.length} მონიშნული`
@@ -119,7 +124,7 @@ const Filters = ({
           <img
             src="/assets/images/arrow-down-icon.png"
             alt="arrow-down-icon"
-            className="h-2 ml-3"
+            className={`h-2 ml-3 ${isPriorityOpen ? "filter-active" : ""}`}
           />
         </button>
         {isPriorityOpen && (
@@ -146,7 +151,9 @@ const Filters = ({
       <div className="relative" ref={employeeRef}>
         <button
           onClick={() => setIsEmployeeOpen(!isEmployeeOpen)}
-          className="max-w-50 w-full flex items-center py-3 px-5 rounded cursor-pointer"
+          className={`max-w-50 w-full flex items-center py-3 px-5 rounded cursor-pointer ${
+            isEmployeeOpen ? "text-[#8338EC]" : ""
+          }`}
         >
           {selectedEmployees.length > 0
             ? `${truncate(
@@ -162,7 +169,7 @@ const Filters = ({
           <img
             src="/assets/images/arrow-down-icon.png"
             alt="arrow-down-icon"
-            className="h-2 ml-3"
+            className={`h-2 ml-3 ${isEmployeeOpen ? "filter-active" : ""}`}
           />
         </button>
         {isEmployeeOpen && (

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import BtnCreateNew from "../button/BtnCreateNew";
-import ModalForm from "../ModalForm";
+import ModalForm from "../modalForm/ModalForm";
 import BurgerMenuButton from "./BurgerMenuButton";
 import MobileMenu from "./MobileMenu";
 

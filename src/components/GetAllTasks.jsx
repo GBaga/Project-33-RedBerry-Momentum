@@ -805,7 +805,7 @@
 //   fetchPriorities,
 //   fetchEmployees,
 // } from "../config/api";
-// import Filters from "../components/Filters";
+// import Filters from "./filters/Filters";
 // import TaskColumns from "../components/TaskColumns";
 // import Loader from "../components/Loader";
 // import { useState } from "react";
@@ -894,7 +894,7 @@ import {
   fetchPriorities,
   fetchEmployees,
 } from "../config/api";
-import Filters from "./Filters";
+import Filters from "./filters/Filters";
 import TaskColumns from "./TaskColumns";
 import SelectedFilters from "./SelectedFilters";
 import Loader from "./Loader";
