@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import BtnCreateNew from "../button/BtnCreateNew";
-import ModalWindow from "../ModalWindow";
 import ModalForm from "../ModalForm";
+import BurgerMenuButton from "./BurgerMenuButton";
+import MobileMenu from "./MobileMenu";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -35,7 +36,7 @@ function Navbar() {
         </div>
 
         {/* Burger Menu Button */}
-        <button
+        {/* <button
           onClick={() => setMenuOpen(!menuOpen)}
           className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-400 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600 md:hidden"
           aria-expanded={menuOpen}
@@ -55,11 +56,13 @@ function Navbar() {
               d="M1 1h15M1 7h15M1 13h15"
             />
           </svg>
-        </button>
+        </button> */}
+
+        <BurgerMenuButton menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
       </div>
 
       {/* Mobile Menu */}
-      <div
+      {/* <div
         className={`fixed inset-0 bg-gray-900 bg-opacity-95 flex flex-col justify-center items-center transition-all duration-300 ${
           menuOpen
             ? "opacity-100 scale-100"
@@ -108,7 +111,9 @@ function Navbar() {
             </Link>
           </div>
         </div>
-      </div>
+      </div> */}
+
+      <MobileMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
     </nav>
   );
 }

@@ -39,7 +39,7 @@ const ModalForm = () => {
     const token = import.meta.env.VITE_API_TOKEN;
 
     try {
-      const response = await publicAxios.post(
+      await publicAxios.post(
         "https://momentum.redberryinternship.ge/api/employees",
         formData,
         {

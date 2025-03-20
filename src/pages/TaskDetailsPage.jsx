@@ -1,50 +1,16 @@
 import { React, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { publicAxios } from "../config/axios";
-import axios from "axios"; // Import axios
+import {
+  fetchTaskDetails,
+  fetchStatuses,
+  fetchComments,
+  postComment,
+  updateStatus,
+} from "../config/api";
+import countTotalComments from "../components/utils/countTotalComments";
 import Loader from "../components/Loader";
 import Swal from "sweetalert2";
-
-const fetchTaskDetails = async (taskId) => {
-  const response = await publicAxios.get(`/tasks/${taskId}`);
-  return response.data;
-};
-
-const fetchStatuses = async () => {
-  const { data } = await publicAxios.get("/statuses");
-  return data;
-};
-
-const fetchComments = async (taskId) => {
-  const response = await publicAxios.get(`/tasks/${taskId}/comments`);
-  return response.data;
-};
-
-const postComment = async ({ taskId, text, parentId = null }) => {
-  const token = import.meta.env.VITE_API_TOKEN;
-  const response = await publicAxios.post(
-    `/tasks/${taskId}/comments`,
-    { text, parent_id: parentId },
-    {
-      headers: {
-        Accept: "application/json",
-        Authorization: `Bearer ${token?.trim()}`,
-      },
-    }
-  );
-  return response.data;
-};
-
-const countTotalComments = (comments) => {
-  let total = comments.length;
-  comments.forEach((comment) => {
-    if (comment.sub_comments && comment.sub_comments.length > 0) {
-      total += countTotalComments(comment.sub_comments); // Recursively count sub-comments
-    }
-  });
-  return total;
-};
 
 const TaskDetailsPage = () => {
   const { taskId } = useParams();
@@ -52,6 +18,7 @@ const TaskDetailsPage = () => {
   const [commentText, setCommentText] = useState("");
   const [replyingTo, setReplyingTo] = useState(null);
   const [replyText, setReplyText] = useState({});
+
   const {
     data: task,
     isLoading: isTaskLoading,
@@ -61,6 +28,7 @@ const TaskDetailsPage = () => {
     queryFn: () => fetchTaskDetails(taskId),
     enabled: !!taskId,
   });
+
   const {
     data: statuses,
     isLoading: isStatusesLoading,
@@ -69,11 +37,13 @@ const TaskDetailsPage = () => {
     queryKey: ["statuses"],
     queryFn: fetchStatuses,
   });
+
   const { data: comments = [], isLoading: commentsLoading } = useQuery({
     queryKey: ["taskComments", taskId],
     queryFn: () => fetchComments(taskId),
     enabled: !!taskId,
   });
+
   const commentMutation = useMutation({
     mutationFn: postComment,
     onSuccess: () => {
@@ -103,23 +73,8 @@ const TaskDetailsPage = () => {
   };
 
   const updateStatusMutation = useMutation({
-    mutationFn: async (newStatusId) => {
-      const token = import.meta.env.VITE_API_TOKEN; // Define token here
-      const response = await axios.put(
-        `https://momentum.redberryinternship.ge/api/tasks/${taskId}`,
-        { status_id: newStatusId },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      return response.data;
-    },
+    mutationFn: (newStatusId) => updateStatus(taskId, newStatusId),
     onSuccess: (data) => {
-      // Manually update the cache with the new status
       queryClient.setQueryData(["task", taskId], (oldData) => ({
         ...oldData,
         status: {
@@ -127,12 +82,27 @@ const TaskDetailsPage = () => {
           name: data.status.name,
         },
       }));
-      // Re-fetch the task to ensure the latest data is loaded
       queryClient.invalidateQueries(["task", taskId]);
       Swal.fire({
         position: "top-end",
         icon: "success",
-        title: "სტატუსი წარმატებით შეიცვალა!",
+        title: "Status updated successfully!",
+        showConfirmButton: false,
+        timer: 2000,
+        background: "#F8F3FE",
+        color: "#212529",
+        customClass: {
+          popup: "rounded-lg shadow-lg p-6",
+          title: "text-[#212529] font-semibold text-lg",
+        },
+      });
+    },
+    onError: (error) => {
+      console.error("Error updating status:", error);
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: "Failed to update status",
         showConfirmButton: false,
         timer: 2000,
         background: "#F8F3FE",
@@ -242,6 +212,7 @@ const TaskDetailsPage = () => {
       : task.priority.id === 2
       ? "#FFBE0B"
       : "#FA4D4D";
+
   const depColor =
     task.department.id === 1
       ? "#6A77FD"
@@ -258,6 +229,7 @@ const TaskDetailsPage = () => {
       : task.department.id === 7
       ? "#A27AFF"
       : "#CCCCCC";
+
   const totalComments = countTotalComments(comments);
 
   return (
@@ -291,7 +263,6 @@ const TaskDetailsPage = () => {
             </div>
           </div>
         </div>
-
         <h2 className="font-semibold text-[34px] leading-[100%] tracking-normal text-[#212529] mb-9">
           {task.name}
         </h2>
@@ -315,22 +286,17 @@ const TaskDetailsPage = () => {
             onChange={handleStatusChange}
           >
             {statuses.map((status) => (
-              <option
-                key={status.id}
-                value={status.id}
-                // className="text-[14px] font-light leading-none text-[#0D0F10]"
-              >
+              <option key={status.id} value={status.id}>
                 {status.name}
               </option>
             ))}
           </select>
         </div>
-
         <div className="flex max-w-lg">
           <div className="flex w-1/2">
             <img
               src="/assets/images/user-icon.png"
-              alt="pie-chart-icon"
+              alt="user-icon"
               className="w-6 h-6 mr-1"
             />
             <p className="text-gray-600">თანამშრომელი: </p>
@@ -347,14 +313,12 @@ const TaskDetailsPage = () => {
               <p className="font-light text-xs leading-none tracking-normal text-[#474747]">
                 {task.department.name || "N/A"}
               </p>
-
               <p className="text-[#0D0F10] font-normal text-[14px] leading-[150%] tracking-normal">
                 {task.employee?.name || "N/A"} {task.employee?.surname || "N/A"}
               </p>
             </div>
           </div>
         </div>
-
         <div className="flex max-w-lg">
           <div className="flex w-1/2">
             <img
@@ -369,26 +333,24 @@ const TaskDetailsPage = () => {
           </p>
         </div>
       </div>
-
-      <div className="min-w-1/2  bg-[#F8F3FEA6] bg-opacity-65 p-6 rounded-lg py-11 px-10">
+      <div className="min-w-1/2 bg-[#F8F3FEA6] bg-opacity-65 p-6 rounded-lg py-11 px-10">
         <div className="relative">
           <textarea
             value={commentText}
             onChange={(e) => setCommentText(e.target.value)}
             placeholder="დაწერე კომენტარი..."
-            className="w-full  h-32 relative p-4 border bg-white border-gray-300 rounded-lg"
+            className="w-full h-32 relative p-4 border bg-white border-gray-300 rounded-lg"
           ></textarea>
           <button
             onClick={() =>
               commentMutation.mutate({ taskId, text: commentText })
             }
             disabled={!commentText.trim()}
-            className="w-38 h-fit px-5 absolute bottom-4 right-5 rounded-[20px] bg-[#8338EC] text-white p-2  hover:bg-[#B588F4] cursor-pointer"
+            className="w-38 h-fit px-5 absolute bottom-4 right-5 rounded-[20px] bg-[#8338EC] text-white p-2 hover:bg-[#B588F4] cursor-pointer"
           >
             დააკომენტარე
           </button>
         </div>
-
         <div className="flex gap-x-2 items-center mt-16 mb-10">
           <h3 className="font-medium text-lg leading-tight tracking-tight">
             კომენტარები

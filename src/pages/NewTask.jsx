@@ -39,7 +39,7 @@ const NewTask = () => {
   } = useForm({
     defaultValues: {
       priority: 2,
-      status: 1, // Default priority value (შუალო)
+      status: 1,
     },
   });
 

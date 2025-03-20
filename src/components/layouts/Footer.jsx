@@ -1,3 +1,4 @@
+import FooterLinks from "./FooterLinks";
 import SocialNetworks from "./SocialNetworks";
 import { Link } from "react-router";
 
@@ -10,7 +11,7 @@ function Footer() {
           <div className="w-full flex flex-col  items-center gap-8 sm:gap-7 md:flex-row md:justify-between">
             <SocialNetworks />
 
-            <p className="text-sm text-gray-500 dark:text-gray-300 sm:text-center md:order-first">
+            {/* <p className="text-sm text-gray-500 dark:text-gray-300 sm:text-center md:order-first">
               © 2025 GBaga for
               <Link
                 to="https://redberry.international/bootcamp/"
@@ -25,7 +26,9 @@ function Footer() {
                 <span> Bootcamp #9 | </span>
               </Link>
               ყველა უფლება დაცულია.
-            </p>
+            </p> */}
+
+            <FooterLinks />
           </div>
         </div>
       </div>
