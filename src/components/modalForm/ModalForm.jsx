@@ -3,7 +3,7 @@ import { Modal, Button, Form, Input, Select, Upload } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
 import { fetchDepartments, createEmployee } from "../../config/api"; // Import from API file
-import "./modalForm.css";
+import "./modalForm.css"; // Ensure this file is imported
 import Loader from "../Loader";
 import Swal from "sweetalert2";
 
@@ -121,12 +121,7 @@ const ModalForm = () => {
                 className="w-full"
                 label="სახელი"
                 name="firstName"
-                rules={[
-                  {
-                    required: true,
-                    message: "გთხოვთ შეიყვანეთ თქვენი სახელი!",
-                  },
-                ]}
+                rules={[{ required: true, message: "Please input your name!" }]}
               >
                 <Input />
               </Form.Item>
@@ -135,7 +130,7 @@ const ModalForm = () => {
                 label="გვარი"
                 name="lastName"
                 rules={[
-                  { required: true, message: "გთხოვთ შეიყვანეთ თქვენი გვარი!" },
+                  { required: true, message: "Please input your surname!" },
                 ]}
               >
                 <Input />
@@ -163,7 +158,7 @@ const ModalForm = () => {
               label="დეპარტამენტი"
               name="department"
               rules={[
-                { required: true, message: "გთხოვთ აირჩიეთ დეპარტამენტი!" },
+                { required: true, message: "Please select a department!" },
               ]}
             >
               <Select className="w-full md:max-w-[50%]">

@@ -16,8 +16,8 @@ const MobileMenu = ({ menuOpen, setMenuOpen }) => {
     <>
       {menuOpen && (
         <div
+          onDoubleClick={() => setMenuOpen(false)}
           className="fixed inset-0 bg-gray-900 bg-opacity-95 flex flex-col justify-center items-center transition-all duration-300 z-50"
-          onClick={() => setMenuOpen(false)}
         >
           <button
             onClick={() => setMenuOpen(false)}
