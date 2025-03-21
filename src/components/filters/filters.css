@@ -2,3 +2,21 @@
   filter: invert(34%) sepia(83%) saturate(7472%) hue-rotate(258deg)
     brightness(95%) contrast(101%);
 }
+
+.drop-down-window {
+  max-height: 274px;
+
+  border-color: #8338ec;
+  position: absolute;
+  background-color: white;
+  padding: 10px;
+  border-radius: 10px;
+  border-width: 0.5px;
+
+  gap: 25px;
+
+  overflow: auto;
+  z-index: 11;
+}
+
+/* <div className="absolute bg-white w-[400px] border p-2 rounded mt-1 min-h-fit overflow-auto z-10"> */

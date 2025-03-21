@@ -91,7 +91,7 @@ const Filters = ({
           />
         </button>
         {isDepartmentOpen && (
-          <div className="absolute bg-white w-[400px] border p-2 rounded mt-1 min-h-fit overflow-auto z-10">
+          <div className="drop-down-window w-96">
             {departments?.map((dep) => (
               <label
                 key={dep.id}
@@ -128,7 +128,7 @@ const Filters = ({
           />
         </button>
         {isPriorityOpen && (
-          <div className="absolute bg-white border p-2 rounded w-full mt-1 max-h-60 overflow-auto z-10 cursor-pointer">
+          <div className="drop-down-window w-40">
             {priorities?.map((priority) => (
               <label
                 key={priority.id}
@@ -173,7 +173,7 @@ const Filters = ({
           />
         </button>
         {isEmployeeOpen && (
-          <div className="absolute bg-white w-[300px] border p-2 rounded mt-1 max-h-60 overflow-auto z-10 cursor-pointer">
+          <div className="drop-down-window">
             {employees?.map((emp) => (
               <label
                 key={emp.id}
