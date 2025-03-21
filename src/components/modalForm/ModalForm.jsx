@@ -49,7 +49,7 @@ const ModalForm = () => {
 
       form.resetFields();
       setOpen(false);
-    } catch {
+    } catch (error) {
       Swal.fire({
         position: "top-end",
         icon: "error",
@@ -72,7 +72,7 @@ const ModalForm = () => {
     <>
       <button
         onClick={() => setOpen(true)}
-        className=" h-10 inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white md:text-black rounded-[5px] border border-purple-600 hover:border-purple-300 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900 cursor-pointer transition-all duration-300 ease-in-out"
+        className="h-10 inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white md:text-black rounded-[5px] border border-purple-600 hover:border-purple-300 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900 cursor-pointer transition-all duration-300 ease-in-out"
       >
         თანამშრომლის შექმნა
       </button>
@@ -95,7 +95,7 @@ const ModalForm = () => {
         centered
         open={open}
         onCancel={() => setOpen(false)}
-        width="50%"
+        width="90%" // Adjust width for mobile screens
         footer={[
           <Button key="cancel" onClick={() => setOpen(false)}>
             გაუქმება
@@ -116,12 +116,17 @@ const ModalForm = () => {
             onFinish={onFinish}
             className="w-full"
           >
-            <div className="flex w-full justify-between gap-4">
+            <div className="flex flex-col md:flex-row w-full justify-between gap-4">
               <Form.Item
                 className="w-full"
                 label="სახელი"
                 name="firstName"
-                rules={[{ required: true, message: "Please input your name!" }]}
+                rules={[
+                  {
+                    required: true,
+                    message: "გთხოვთ შეიყვანეთ თქვენი სახელი!",
+                  },
+                ]}
               >
                 <Input />
               </Form.Item>
@@ -130,7 +135,7 @@ const ModalForm = () => {
                 label="გვარი"
                 name="lastName"
                 rules={[
-                  { required: true, message: "Please input your surname!" },
+                  { required: true, message: "გთხოვთ შეიყვანეთ თქვენი გვარი!" },
                 ]}
               >
                 <Input />
@@ -158,10 +163,10 @@ const ModalForm = () => {
               label="დეპარტამენტი"
               name="department"
               rules={[
-                { required: true, message: "Please select a department!" },
+                { required: true, message: "გთხოვთ აირჩიეთ დეპარტამენტი!" },
               ]}
             >
-              <Select className="max-w-[50%]">
+              <Select className="w-full md:max-w-[50%]">
                 {departments.map((d) => (
                   <Select.Option key={d.id} value={d.id}>
                     {d.name}
