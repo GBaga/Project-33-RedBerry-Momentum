@@ -3,7 +3,6 @@ const FormTextarea = ({
   register,
   name,
   rules,
-  errors,
   onFocus,
   watch,
   isFocused,

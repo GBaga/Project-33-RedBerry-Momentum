@@ -2,15 +2,10 @@ import React, { useState } from "react";
 import { Modal, Button, Form, Input, Select, Upload } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
-import { publicAxios } from "../../config/axios";
+import { fetchDepartments, createEmployee } from "../../config/api"; // Import from API file
 import "./modalForm.css";
 import Loader from "../Loader";
 import Swal from "sweetalert2";
-
-const fetchDepartments = async () => {
-  const { data } = await publicAxios.get("/departments");
-  return data;
-};
 
 const ModalForm = () => {
   const [open, setOpen] = useState(false);
@@ -36,19 +31,8 @@ const ModalForm = () => {
       formData.append("avatar", values.avatar[0].originFileObj);
     }
 
-    const token = import.meta.env.VITE_API_TOKEN;
-
     try {
-      await publicAxios.post(
-        "https://momentum.redberryinternship.ge/api/employees",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await createEmployee(formData);
       Swal.fire({
         position: "top-end",
         icon: "success",
@@ -65,11 +49,7 @@ const ModalForm = () => {
 
       form.resetFields();
       setOpen(false);
-    } catch (error) {
-      console.error(
-        "Error creating employee:",
-        error.response?.data || error.message
-      );
+    } catch {
       Swal.fire({
         position: "top-end",
         icon: "error",

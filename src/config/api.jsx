@@ -65,3 +65,27 @@ export const fetchTasks = async () => {
     throw new Error(error.response?.data?.message || "Failed to fetch tasks");
   }
 };
+
+export const createEmployee = async (formData) => {
+  const token = import.meta.env.VITE_API_TOKEN;
+
+  try {
+    const response = await publicAxios.post(
+      "https://momentum.redberryinternship.ge/api/employees",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error creating employee:",
+      error.response?.data || error.message
+    );
+    throw error;
+  }
+};
