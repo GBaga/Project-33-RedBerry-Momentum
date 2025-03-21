@@ -32,6 +32,18 @@ const FormSelect = ({
           placeholder={placeholder}
           className="w-full"
           isDisabled={isDisabled}
+          styles={{
+            control: (provided, state) => ({
+              ...provided,
+              borderColor: state.isFocused ? "#8338ec" : provided.borderColor,
+              boxShadow: state.isFocused
+                ? "0 0 0 1px #8338ec"
+                : provided.boxShadow,
+              "&:hover": {
+                borderColor: state.isFocused ? "#8338ec" : provided.borderColor,
+              },
+            }),
+          }}
         />
       )}
     />

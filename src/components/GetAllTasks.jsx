@@ -71,7 +71,7 @@ const GetAllTasks = () => {
 
   return (
     <>
-      <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-14">
+      <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-14 p-4">
         დავალებების გვერდი
       </h1>
       <div className="p-4">

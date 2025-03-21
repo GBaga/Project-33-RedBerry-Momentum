@@ -10,6 +10,16 @@
   border-bottom: 1px solid #ccc;
 }
 
+.react-datepicker__input-container {
+  background-image: url("/public/assets/images/calendar-icon.png");
+  background-size: 16px;
+  background-repeat: no-repeat;
+  background-position: calc(calc(var(--spacing) * 2)) center;
+}
+
+.text-right {
+}
+
 .react-datepicker__current-month,
 .react-datepicker-time__header {
   color: #343a40;
@@ -18,12 +28,14 @@
 .react-datepicker__day--selected,
 .react-datepicker__day--keyboard-selected {
   background-color: #8338ec;
-  color: #fff;
+  color: #fff !important;
+  font-weight: 600;
 }
 
 .react-datepicker__day--today {
-  background-color: #f1ebae;
-  color: #000;
+  background-color: #ffea00;
+  color: #fff !important;
+  border-radius: 4px;
 }
 
 .custom-input {

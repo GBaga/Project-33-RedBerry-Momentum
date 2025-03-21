@@ -23,7 +23,7 @@ const FormInput = ({
         })}
         onFocus={onFocus}
         type={type}
-        className="max-w-[550px] w-full min-h-[45px] rounded-[5px] border focus:border-[2px] border-[#DEE2E6] bg-[#FFFFFF] px-3 py-1.5 gap-[10px] focus:border-blue-400 focus:outline-none"
+        className="max-w-[550px] w-full min-h-[45px] rounded-[5px] border focus:border-[2px] border-[#DEE2E6] bg-[#FFFFFF] px-3 py-1.5 gap-[10px] focus:border-[#8338ec] focus:outline-none"
       />
       {errors[name] && (
         <p className="text-red-500 text-sm">{errors[name].message}</p>

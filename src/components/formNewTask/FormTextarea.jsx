@@ -20,7 +20,7 @@ const FormTextarea = ({
           ref: (el) => el && el.focus && el.focus(),
         })}
         onFocus={onFocus}
-        className="max-w-[550px] w-full min-h-[133px] rounded-[5px] border focus:border-[2px] border-[#DEE2E6] bg-[#FFFFFF] p-[14px] gap-[10px] focus:border-blue-400 focus:outline-none"
+        className="max-w-[550px] w-full min-h-[133px] rounded-[5px] border focus:border-[2px] border-[#DEE2E6] bg-[#FFFFFF] p-[14px] gap-[10px] focus:border-[#8338ec] focus:outline-none"
       />
       {isFocused && value && (
         <>

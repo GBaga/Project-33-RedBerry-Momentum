@@ -30,7 +30,7 @@ const FormDatePicker = ({
           locale={locale}
           dateFormat={dateFormat}
           minDate={minDate}
-          className="w-full p-2 border border-gray-300 rounded focus:border-[2px] focus:border-blue-400 focus:outline-none cursor-pointer"
+          className="w-full p-2 border border-gray-300 rounded focus:border-[2px] focus:border-[#8338ec] focus:outline-none cursor-pointer pl-9"
         />
       )}
     />
