@@ -28,7 +28,7 @@ const MobileMenu = ({ menuOpen, setMenuOpen }) => {
               className="flex items-center space-x-3 mb-8"
               onClick={() => setMenuOpen(false)}
             >
-              <span className="self-center text-2xl font-semibold whitespace-nowrap text-white">
+              <span className="main-logo-font self-center text-2xl font-semibold whitespace-nowrap text-white">
                 Momentum
               </span>
               <img

@@ -7,6 +7,22 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: "Fredoka One";
+  src: url("/assets/fonts/Fredoka-VariableFont_wdth\,wght.ttf")
+    format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 * {
   font-family: "firaGO";
+}
+
+.main-logo-font {
+  font-family: "Fredoka One", sans-serif;
+  font-weight: 700; /* დიზანიში 400 კი წერია, მაგამ ვიზუალრად ეს უფრო გავს */
+  font-size: 31px;
+  line-height: 100%;
+  color: #8338ec;
 }

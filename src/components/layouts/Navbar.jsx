@@ -12,7 +12,7 @@ function Navbar() {
     <nav className="border-gray-700 sm:px-[40px] md:px-[70px] lg:px-[100px] xl:px-[120px]">
       <div className="max-w-[1920px] flex flex-wrap items-center justify-between mx-auto px-4  h-32">
         <Link to="/" className="flex items-center space-x-3 w-[210px] h-[38px]">
-          <span className="self-center text-2xl font-semibold whitespace-nowrap">
+          <span className="main-logo-font self-center text-2xl font-semibold whitespace-nowrap">
             Momentum
           </span>
           <img
@@ -34,85 +34,8 @@ function Navbar() {
             </li>
           </ul>
         </div>
-
-        {/* Burger Menu Button */}
-        {/* <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-400 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600 md:hidden"
-          aria-expanded={menuOpen}
-        >
-          <span className="sr-only text-white">Open main menu</span>
-          <svg
-            className="w-5 h-5"
-            aria-hidden="true"
-            fill="none"
-            viewBox="0 0 17 14"
-          >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M1 1h15M1 7h15M1 13h15"
-            />
-          </svg>
-        </button> */}
-
         <BurgerMenuButton menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
       </div>
-
-      {/* Mobile Menu */}
-      {/* <div
-        className={`fixed inset-0 bg-gray-900 bg-opacity-95 flex flex-col justify-center items-center transition-all duration-300 ${
-          menuOpen
-            ? "opacity-100 scale-100"
-            : "opacity-0 scale-95 pointer-events-none"
-        } md:hidden`}
-        onClick={() => setMenuOpen(false)}
-      >
-        <button
-          onClick={() => setMenuOpen(false)}
-          className="absolute top-4 right-4 text-white text-2xl cursor-pointer"
-        >
-          ✖
-        </button>
-
-        <div className="w-full px-4 text-center ">
-          <Link
-            to="/"
-            className="flex items-center space-x-3  mb-8"
-            onClick={() => setMenuOpen(false)}
-          >
-            <span className="self-center text-2xl font-semibold whitespace-nowrap text-white">
-              Momentum
-            </span>
-            <img
-              src="/assets/images/hourglass-img.png"
-              className="h-full"
-              alt="Site Logo"
-            />
-          </Link>
-
-          <div className="flex flex-col space-y-4 sm:justify-center">
-            <ModalForm />
-            <Link
-              to="/new-task"
-              onClick={() => setMenuOpen(false)}
-              className="max-w-full "
-            >
-              <BtnCreateNew title="+ შექმენი ახალი დავალება" />
-            </Link>
-            <Link
-              onClick={() => setMenuOpen(false)}
-              to="/"
-              className="inline-flex justify-center hover:text-gray-900 items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg border border-white hover:bg-gray-100 focus:ring-4 focus:ring-gray-400"
-            >
-              მთავარი
-            </Link>
-          </div>
-        </div>
-      </div> */}
-
       <MobileMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
     </nav>
   );

@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import { Modal, Button, Form, Input, Select, Upload } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
-import { fetchDepartments, createEmployee } from "../../config/api"; // Import from API file
-import "./modalForm.css"; // Ensure this file is imported
+import { fetchDepartments, createEmployee } from "../../config/api";
+import "./modalForm.css";
 import Loader from "../Loader";
 import Swal from "sweetalert2";
+import CustomIcon from "/assets/images/gallery-export-icon.png";
 
 const ModalForm = () => {
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
+  const [fileList, setFileList] = useState([]);
 
   const {
     data: departments = [],
@@ -48,6 +49,7 @@ const ModalForm = () => {
       });
 
       form.resetFields();
+      setFileList([]);
       setOpen(false);
     } catch (error) {
       Swal.fire({
@@ -66,13 +68,19 @@ const ModalForm = () => {
     }
   };
 
-  const normFile = (e) => (Array.isArray(e) ? e : e?.fileList);
+  const normFile = (e) => {
+    const fileList = Array.isArray(e) ? e : e?.fileList;
+    setFileList(fileList);
+    return fileList;
+  };
+
+  const handleChange = ({ fileList }) => setFileList(fileList);
 
   return (
     <>
       <button
         onClick={() => setOpen(true)}
-        className="h-10 inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white md:text-black rounded-[5px] border border-purple-600 hover:border-purple-300 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900 cursor-pointer transition-all duration-300 ease-in-out"
+        className="h-10 inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white md:text-black rounded-[5px] border border-purple-600 hover:border-purple-300 cursor-pointer transition-all duration-300 ease-in-out"
       >
         თანამშრომლის შექმნა
       </button>
@@ -95,7 +103,7 @@ const ModalForm = () => {
         centered
         open={open}
         onCancel={() => setOpen(false)}
-        width="90%" // Adjust width for mobile screens
+        width="90%"
         footer={[
           <Button key="cancel" onClick={() => setOpen(false)}>
             გაუქმება
@@ -121,7 +129,7 @@ const ModalForm = () => {
                 className="w-full"
                 label="სახელი"
                 name="firstName"
-                rules={[{ required: true, message: "Please input your name!" }]}
+                rules={[{ required: true, message: "შეიყვანეთ სახელი!" }]}
               >
                 <Input />
               </Form.Item>
@@ -129,9 +137,7 @@ const ModalForm = () => {
                 className="w-full"
                 label="გვარი"
                 name="lastName"
-                rules={[
-                  { required: true, message: "Please input your surname!" },
-                ]}
+                rules={[{ required: true, message: "შეიყვანეთ გვარი!" }]}
               >
                 <Input />
               </Form.Item>
@@ -146,20 +152,27 @@ const ModalForm = () => {
                 className="custom-upload w-full"
                 listType="picture-card"
                 beforeUpload={() => false}
+                maxCount={1}
+                fileList={fileList}
+                onChange={handleChange}
               >
-                <div>
-                  <PlusOutlined />
-                  <div style={{ marginTop: 8 }}>Upload</div>
-                </div>
+                {fileList.length === 0 && (
+                  <div>
+                    <img
+                      src={CustomIcon}
+                      alt="Upload"
+                      style={{ width: 24, height: 24, margin: "auto" }}
+                    />
+                    <div style={{ marginTop: 8 }}>ატვირთე ფოტო</div>
+                  </div>
+                )}
               </Upload>
             </Form.Item>
 
             <Form.Item
               label="დეპარტამენტი"
               name="department"
-              rules={[
-                { required: true, message: "Please select a department!" },
-              ]}
+              rules={[{ required: true, message: "აირჩიეთ დეპარტამენტი!" }]}
             >
               <Select className="w-full md:max-w-[50%]">
                 {departments.map((d) => (

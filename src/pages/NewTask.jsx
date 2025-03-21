@@ -12,7 +12,7 @@ import Loader from "../components/Loader";
 import BtnCreateNew from "../components/button/BtnCreateNew";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-import ReactDatePicker, { registerLocale } from "react-datepicker";
+import { registerLocale } from "react-datepicker";
 import { addDays } from "date-fns";
 import ka from "date-fns/locale/ka";
 import "react-datepicker/dist/react-datepicker.css";
@@ -40,7 +40,7 @@ const NewTask = () => {
     defaultValues: {
       priority: 2,
       status: 1,
-      deadline: tomorrow, // Set default value for deadline
+      deadline: tomorrow,
     },
   });
 
