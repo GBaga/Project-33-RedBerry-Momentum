@@ -15,10 +15,7 @@ const MobileMenu = ({ menuOpen, setMenuOpen }) => {
   return (
     <>
       {menuOpen && (
-        <div
-          onDoubleClick={() => setMenuOpen(false)}
-          className="fixed inset-0 bg-gray-900 bg-opacity-95 flex flex-col justify-center items-center transition-all duration-300 z-50"
-        >
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-95 flex flex-col justify-center items-center transition-all duration-300 z-50">
           <button
             onClick={() => setMenuOpen(false)}
             className="absolute top-4 right-4 text-white text-2xl cursor-pointer"
