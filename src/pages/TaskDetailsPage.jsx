@@ -86,7 +86,7 @@ const TaskDetailsPage = () => {
       Swal.fire({
         position: "top-end",
         icon: "success",
-        title: "Status updated successfully!",
+        title: "სტატუსი წარმატებით შეიცვალა!",
         showConfirmButton: false,
         timer: 2000,
         background: "#F8F3FE",
